@@ -1,43 +1,162 @@
-<div class="local_customerintel">
-  <h3>{{#str}} intelligencedashboard, local_customerintel {{/str}}</h3>
-  <div class="mb-3">
-    <a class="btn btn-primary" href="{{runurl}}">{{#str}} newanalysisrun, local_customerintel {{/str}}</a>
-    <a class="btn btn-secondary" href="{{reportsurl}}">{{#str}} viewreports, local_customerintel {{/str}}</a>
-    <a class="btn btn-info" href="{{sourcesurl}}">{{#str}} managesources, local_customerintel {{/str}}</a>
-    {{#canviewlogs}}
-    <a class="btn btn-warning" href="{{logsurl}}">{{#str}} viewlogs, local_customerintel {{/str}}</a>
-    {{/canviewlogs}}
+<style>
+
+body #page.drawers .main-inner {width: 100% !important; max-width:100% !important; padding: 0 !important;}
+#customerintel_head {width: 100%;  background: url(https://sales.multi.rubi.digital/pix/hero-head-bg.png)!important; overflow: visible; margin: 0; }
+#inner_customerintel_head {margin: 0 auto; max-width: 1200px; color: #fff;display: flex;padding: 20px 0}
+#inner_customerintel_head h3 {color: #fff;line-height:100px; verical-align: middle;margin-left: 12px;}
+.local_customerintel {max-width: 1200px; margin: 0 auto;}
+.intelcard_row {display: flex; gap: 8px; width: 100%;}
+.custintel_card {background: #fff; padding: 20px;font-size: 15px; border-radius: 8px;width: 25%}
+.custintel_card strong {font-size: 19px;}
+.custintel_card i {font-size: 42px; float: right; display: inline;}
+.intel_dash_search {width: 100%; padding-bottom: 20px;border-bottom: solid 1px #C4C4C4;display: block; clear: both; height: 70px;}
+.intel_dash_search .btn {}
+.inteldash_table {margin-top: 20px;}
+.inteldash_table thead {margin-top: 20px;}
+.inteldash_table {width: 100%;border-collapse: separate;border-spacing: 0 8px; }
+.inteldash_table tbody tr{background: #fff;}
+.inteldash_table tbody tr:hover{background: #F9FAFC;}
+.inteldash_table tbody td, .inteldash_table thead th {padding: 10px;}
+.inteldash_table td.icon_cell {text-align: center;}
+.inteldash_table td:first-child{border-top-left-radius: 8px;border-bottom-left-radius: 8px; }
+.inteldash_table td:last-child{border-top-right-radius: 8px;border-bottom-right-radius: 8px;}
+.dropdown {float: right;}
+.dropdown-toggle {float: right; border: none; background: none; font-size: 22px;}
+.cancelbutton {font-weight: 400!important;}
+#page-header, .secondary-navigation, .dropdown-toggle::after {display: none;}
+
+i.processing, i.running,i.completed {color:#21DBBA }
+
+
+.intel_dash_search input {
+
+      border: solid 1px #D6D6D6;
+    color: #3c3c3c;
+    padding: 0 5px;
+    font-size: 15px;
+    border-radius: 5px;
+    height: 44px;
+    align-self: flex-end;
+    margin: auto 0;
+}
+.intel_dash_search input::placeholder {
+
+  color:  #D6D6D6;
+}
+
+.intel_dash_search button {
+color: #3577AF;
+    font-size: 15px;
+    white-space: nowrap;
+    align-self: flex-end;
+    height: 28px;
+    line-height: 32px;
+    margin-top: -4px;
+    vertical-align: middle;
+    width: auto;
+    border: none !important;
+    background: transparent;
+    margin-left: -40px;
+}
+@media (max-width: 1200px) {
+.inteldash_table,  {width: 95%; margin: 0px auto;}
+.intelcard_row {padding: 0 20px;}
+.intel_dash_search .btn {margin-right: 20px;}
+}
+
+@media (max-width: 800px) {
+   .intelcard_row {flex-wrap: wrap;}
+   .custintel_card {width: 49%;}
+.inteldash_table {padding: 0 20px;}
+.inteldash_table th:nth-of-type(1), .inteldash_table th:nth-of-type(3), .inteldash_table th:nth-of-type(5), .inteldash_table th:nth-of-type(6){display: none;}
+.inteldash_table td:nth-of-type(1), .inteldash_table td:nth-of-type(3), .inteldash_table td:nth-of-type(5), .inteldash_table td:nth-of-type(6){display: none;}
+.inteldash_table th:nth-of-type(4) {text-align: center;}
+
+
+}
+@media (max-width: 600px) {
+
+#inner_customerintel_head svg{display: none;}
+#inner_customerintel_head {padding: 20px;}
+}
+</style>
+
+<header id="customerintel_head">
+ <div id="inner_customerintel_head">
+ <svg width="89" height="108" viewBox="0 0 89 108" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M44.4932 0C69.0792 -0.0129625 88.9998 19.9103 89 44.5C89 54.196 85.9026 63.1667 80.6406 70.4775C80.5231 70.6409 80.3959 70.8014 80.2627 70.9619C72.1595 81.9049 59.1504 89 44.4932 89C35.4295 89 27.0155 86.2893 19.9795 81.6396C19.914 81.6008 19.851 81.5617 19.791 81.5215C7.85436 73.5236 0 59.9254 0 44.5C0.000153695 19.9233 19.9202 0.000190286 44.4932 0Z" fill="white"/>
+<path d="M39.1256 22.1262C39.1256 19.7085 41.0831 17.7503 43.5 17.7503C45.9169 17.7503 47.8744 19.7085 47.8744 22.1262C47.8744 24.5439 45.9169 26.5021 43.5 26.5021C41.0831 26.5021 39.1256 24.5439 39.1256 22.1262ZM44.3749 28.1868C47.3385 27.7601 49.6242 25.2112 49.6242 22.1262C49.6242 18.7458 46.8792 16 43.5 16C40.1208 16 37.3758 18.7458 37.3758 22.1262C37.3758 25.2112 39.6615 27.771 42.6251 28.1868V37.4964L38.2617 39.9906L30.8252 35.746C31.9297 32.9674 30.858 29.7292 28.1896 28.1868C25.2587 26.5021 21.5186 27.5085 19.8236 30.4403C18.1285 33.3721 19.1346 37.1135 22.0654 38.8091C22.7653 39.2139 23.4981 39.4655 24.2526 39.564V48.436C23.4981 48.5454 22.7653 48.797 22.0654 49.1909C19.1346 50.8974 18.1285 54.6388 19.8236 57.5706C21.5186 60.5024 25.2587 61.5089 28.1896 59.8132C30.858 58.2708 31.9297 55.0326 30.8252 52.254L34.7293 50.0223L33.8763 49.53V48.4907L29.9612 50.7333C28.9661 49.4534 27.5334 48.6658 26.0024 48.436V39.564C27.5334 39.3452 28.9661 38.5466 29.9612 37.2667L37.3758 41.5112V47.5062L42.6251 50.5036V59.8132C39.6615 60.2399 37.3758 62.7888 37.3758 65.8738C37.3758 69.2542 40.1208 72 43.5 72C46.8792 72 49.6242 69.2542 49.6242 65.8738C49.6242 62.7888 47.3385 60.229 44.3749 59.8132V50.5036L48.7383 48.0094L56.1748 52.254C55.0703 55.0326 56.142 58.2708 58.8104 59.8132C61.7413 61.5089 65.4814 60.5024 67.1764 57.5706C68.8715 54.6388 67.8654 50.8974 64.9346 49.2018C64.2347 48.797 63.491 48.5454 62.7474 48.447V39.5749C63.5019 39.4655 64.2347 39.2139 64.9346 38.8201C67.8654 37.1244 68.8715 33.3831 67.1764 30.4513C65.4814 27.5194 61.7413 26.5021 58.8104 28.1977C56.142 29.7402 55.0703 32.9783 56.1748 35.746L52.2707 37.9887L53.1237 38.481V39.5202L57.0388 37.2776C58.0339 38.5575 59.4666 39.3561 60.9976 39.5749V48.447C59.4666 48.6658 58.0339 49.4643 57.0497 50.7443L49.6242 46.4997V40.5048L44.3749 37.5073V28.1977V28.1868ZM59.6853 29.7074C61.7741 28.504 64.4534 29.2151 65.6673 31.3155C66.8702 33.405 66.1485 36.0852 64.0597 37.2885C61.9709 38.4919 59.2916 37.7808 58.0886 35.6913C56.8747 33.5909 57.5965 30.9107 59.6853 29.7074ZM21.3437 31.3155C22.5466 29.226 25.2259 28.504 27.3257 29.7183C29.4144 30.9217 30.1253 33.6019 28.9223 35.6913C27.7193 37.7808 25.04 38.5028 22.9513 37.2995C20.8515 36.0852 20.1407 33.405 21.3437 31.3155ZM39.1256 65.8847C39.1256 63.4671 41.0831 61.5089 43.5 61.5089C45.9169 61.5089 47.8744 63.4671 47.8744 65.8847C47.8744 68.3024 45.9169 70.2606 43.5 70.2606C41.0831 70.2606 39.1256 68.3024 39.1256 65.8847ZM28.9114 52.3196C29.7753 53.6761 29.8191 55.3936 29.0426 56.8048C28.2552 58.2051 26.7679 59.0693 25.1603 59.0475C23.5527 59.0256 22.0873 58.1176 21.3437 56.6954C20.1407 54.606 20.8515 51.9258 22.9513 50.7224C25.04 49.5081 27.7193 50.2301 28.9223 52.3196H28.9114ZM59.6853 58.2926C57.5965 57.0893 56.8747 54.4091 58.0886 52.3196C59.2916 50.2192 61.9709 49.5081 64.0597 50.7115C66.1485 51.9148 66.8702 54.595 65.6673 56.6954C64.4534 58.7849 61.7741 59.496 59.6853 58.2926ZM43.5 39.017L47.8744 41.5222V46.4888L43.5 48.9939L39.1256 46.4888V41.5222L43.5 39.017Z" fill="#3577AF"/>
+</svg>
+
+  <h3>Customer Intelligence Reports</h3>
   </div>
-  <div class="d-flex gap-4 mb-3">
-    <div><strong>{{queued}}</strong><div>{{#str}} queued, local_customerintel {{/str}}</div></div>
-    <div><strong>{{running}}</strong><div>{{#str}} running, local_customerintel {{/str}}</div></div>
-    <div><strong>{{completed}}</strong><div>{{#str}} completed, local_customerintel {{/str}}</div></div>
-    <div><strong>{{failed}}</strong><div>{{#str}} failed, local_customerintel {{/str}}</div></div>
+</header>
+
+
+
+<div class="local_customerintel">
+
+
+  <div class="mb-3">
+
+    <!--a class="btn btn-secondary" href="{{reportsurl}}">{{#str}} viewreports, local_customerintel {{/str}}</a-->
+   <div class="dropdown">
+    <a class="dropdown-toggle" href="#" role="button" id="settingsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{{#str}} settings, core {{/str}}">
+        <i class="fa-light fa-gear"></i>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="settingsMenu">
+        <a class="dropdown-item" href="{{sourcesurl}}">{{#str}} managesources, local_customerintel {{/str}}</a>
+        {{#canviewlogs}}
+        <a class="dropdown-item" href="{{logsurl}}">{{#str}} viewlogs, local_customerintel {{/str}}</a>
+        {{/canviewlogs}}
+    </div>
+</div>
+  </div>
+  <div class="intelcard_row">
+    <div class="custintel_card"><i class="fa-thin fa-clock" style="color: #969696"></i><strong>{{queued}}</strong><div>{{#str}} queued, local_customerintel {{/str}}</div></div>
+    <div class="custintel_card"><i class="fa-thin fa-circle-notch" style="color: #00BAFF"></i><strong>{{running}}</strong><div>{{#str}} running, local_customerintel {{/str}}</div></div>
+    <div class="custintel_card"><i class="fa-thin fa-circle-check" style="color: #0BA0A9"></i><strong>{{completed}}</strong><div>{{#str}} completed, local_customerintel {{/str}}</div></div>
+    <div class="custintel_card"><i class="fa-thin fa-warning" style="color: #F4604B"></i><strong>{{failed}}</strong><div>{{#str}} failed, local_customerintel {{/str}}</div></div>
   </div>
   <div class="card mb-3">
-    <div class="card-header">{{#str}} recentruns, local_customerintel {{/str}}</div>
-    <div class="card-body">
-      {{#runs}}
-        <table class="table table-sm">
+    <!--div class="card-header">{{#str}} recentruns, local_customerintel {{/str}}</div-->
+
+    <div style="margin-top: 20px;">
+
+    <div class="intel_dash_search">
+          <form action="" method="GET">
+          <input type="search" placeholder="Search by ID, Company or Date..." name="intel" value="{{search}}" class="customer_intel_searchfield" style="width: 48%" data-initial-value="">
+          <button type="submit" style="align-self: flex-end;">
+            <i class="fa-light fa-magnifying-glass"></i>
+          </button>
+          </form>
+      <a class="btn btn-primary" style="float: right" href="{{runurl}}"> <i class="fa-light fa-circle-plus"></i> {{#str}} newanalysisrun, local_customerintel {{/str}}</a>
+    </div>
+
+        <table class="inteldash_table">
           <thead><tr><th>ID</th><th>{{#str}} customer, local_customerintel {{/str}}</th><th>{{#str}} target, local_customerintel {{/str}}</th><th>{{#str}} status, local_customerintel {{/str}}</th><th>{{#str}} started, local_customerintel {{/str}}</th><th>{{#str}} completed, local_customerintel {{/str}}</th><th>Actions</th></tr></thead>
           <tbody>
             {{#runs}}
             <tr>
-              <td>{{id}}</td>
+              <td style="color: #969696">{{id}}</td>
               <td>{{customername}}</td>
-              <td>{{targetname}}</td>
-              <td>{{status}}</td>
-              <td>{{timestarted_h}}</td>
-              <td>{{timecompleted_h}}</td>
+              <td style="color: #969696">{{targetname}}</td>
+              <td class="icon_cell">{{{icon}}}</td>
+              <td style="color: #969696">{{timestarted_h}}</td>
+              <td style="color: #969696">{{timecompleted_h}}</td>
               <td>
                 {{#can_view_report}}
-                  <a href="{{report_url}}" class="btn btn-sm btn-primary">
-                    View Report
+                  <a href="{{report_url}}" class="btn btn-sm cancelbutton">
+
                     {{#is_processing}}
-                      <span class="badge badge-info" style="margin-left: 5px;">
-                        <span class="spinner-small"></span> In Progress
-                      </span>
+
+                        <i class="fa-solid fa-circle-notch fa-spin"></i> In Progress
+
                     {{/is_processing}}
+                      {{^is_processing}}
+                           <i class="fa-light fa-eye"></i> View Report
+                      {{/is_processing}}
+
                   </a>
                 {{/can_view_report}}
               </td>
@@ -45,30 +164,10 @@
             {{/runs}}
           </tbody>
         </table>
-      {{/runs}}
+
       {{^runs}}
         <em>{{#str}} noruns, local_customerintel {{/str}}</em>
       {{/runs}}
     </div>
   </div>
 </div>
-
-<style>
-/* M2 Task 0.2: Spinner for in-progress runs */
-.spinner-small {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid #7FF6D3;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    vertical-align: middle;
-    margin-right: 5px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-</style>
