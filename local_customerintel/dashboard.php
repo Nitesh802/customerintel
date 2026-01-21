@@ -95,14 +95,15 @@ try {
         'completed' => 'r.timecompleted'
     ];
     $order_field = $sort_map[$sort] ?? 'r.timecreated';
-    $order_sql = "ORDER BY {$order_field} {$dir}";
+    // Add secondary sort by ID for consistent ordering
+    $order_sql = "ORDER BY {$order_field} {$dir}, r.id DESC";
 
     // Handle NULL values for completed column (put NULLs at end for desc, beginning for asc)
     if ($sort === 'completed') {
         if ($dir === 'desc') {
-            $order_sql = "ORDER BY CASE WHEN r.timecompleted IS NULL THEN 1 ELSE 0 END, r.timecompleted {$dir}";
+            $order_sql = "ORDER BY CASE WHEN r.timecompleted IS NULL THEN 1 ELSE 0 END, r.timecompleted {$dir}, r.id DESC";
         } else {
-            $order_sql = "ORDER BY CASE WHEN r.timecompleted IS NULL THEN 1 ELSE 0 END DESC, r.timecompleted {$dir}";
+            $order_sql = "ORDER BY CASE WHEN r.timecompleted IS NULL THEN 1 ELSE 0 END DESC, r.timecompleted {$dir}, r.id DESC";
         }
     }
 
