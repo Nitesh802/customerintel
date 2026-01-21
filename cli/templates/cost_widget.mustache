@@ -1,0 +1,261 @@
+{{!
+    Cost Widget - Dashboard widget showing last 10 runs with est vs actual
+}}
+
+<div class="cost-widget card">
+    <div class="card-header bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+        <h4 class="mb-0">
+            <i class="fa fa-chart-line mr-2"></i>
+            Cost Analysis - Last {{summary.total_runs}} Runs
+        </h4>
+    </div>
+    
+    <div class="card-body">
+        {{! Summary Statistics }}
+        <div class="summary-stats mb-4 p-3 bg-gray-50 rounded">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-value text-2xl font-bold text-indigo-600">
+                            {{summary.total_runs}}
+                        </div>
+                        <div class="stat-label text-sm text-gray-600">Total Runs</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-value text-2xl font-bold text-green-600">
+                            {{summary.total_estimated}}
+                        </div>
+                        <div class="stat-label text-sm text-gray-600">Total Estimated</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-value text-2xl font-bold text-blue-600">
+                            {{summary.total_actual}}
+                        </div>
+                        <div class="stat-label text-sm text-gray-600">Total Actual</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-value text-2xl font-bold {{#summary.variance_positive}}text-red-600{{/summary.variance_positive}}{{^summary.variance_positive}}text-green-600{{/summary.variance_positive}}">
+                            {{summary.total_variance}}
+                        </div>
+                        <div class="stat-label text-sm text-gray-600">Variance</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3 text-center">
+                <div class="col-12">
+                    <span class="badge badge-info">Provider: {{summary.provider}}</span>
+                    <span class="badge badge-secondary ml-2">Avg Cost: {{summary.avg_cost}}</span>
+                </div>
+            </div>
+        </div>
+
+        {{! Runs Table }}
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Company</th>
+                        <th>Date</th>
+                        <th>Mode</th>
+                        <th class="text-right">Est. Cost</th>
+                        <th class="text-right">Act. Cost</th>
+                        <th class="text-center">Variance</th>
+                        <th class="text-right">Tokens</th>
+                        <th>Duration</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#runs}}
+                    <tr class="cost-row" data-runid="{{run_id}}">
+                        <td>
+                            <div class="company-info">
+                                <span class="font-semibold">{{company}}</span>
+                                {{#ticker}}
+                                <span class="text-muted text-xs">({{ticker}})</span>
+                                {{/ticker}}
+                            </div>
+                        </td>
+                        <td class="text-nowrap">
+                            <small>{{date}}</small>
+                        </td>
+                        <td>
+                            <span class="badge badge-{{#mode_full}}primary{{/mode_full}}{{^mode_full}}secondary{{/mode_full}}">
+                                {{mode}}
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            <span class="estimated-cost">{{estimated_cost}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span class="actual-cost font-semibold">{{actual_cost}}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="variance-badge badge {{variance_class}}">
+                                {{variance}}
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            <div class="token-info">
+                                <div class="text-xs text-muted">Est: {{estimated_tokens}}</div>
+                                <div class="text-xs">Act: {{actual_tokens}}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <small class="text-muted">{{duration}}</small>
+                        </td>
+                        <td>
+                            <a href="{{wwwroot}}/local/customerintel/report.php?runid={{run_id}}" 
+                               class="btn btn-sm btn-outline-primary" 
+                               title="View Report">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {{/runs}}
+                    {{^runs}}
+                    <tr>
+                        <td colspan="9" class="text-center text-muted py-4">
+                            No completed runs with cost data available
+                        </td>
+                    </tr>
+                    {{/runs}}
+                </tbody>
+            </table>
+        </div>
+
+        {{! Chart Container }}
+        <div class="chart-container mt-4" id="cost-variance-chart" style="height: 300px;">
+            <canvas id="costChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="card-footer text-right">
+        <a href="{{wwwroot}}/local/customerintel/costs.php" class="btn btn-sm btn-primary">
+            View Full Cost Analysis <i class="fa fa-arrow-right ml-1"></i>
+        </a>
+    </div>
+</div>
+
+{{! Chart JavaScript }}
+<script>
+require(['jquery', 'core/chartjs'], function($, Chart) {
+    $(document).ready(function() {
+        // Prepare data for chart
+        var labels = [];
+        var estimatedData = [];
+        var actualData = [];
+        
+        {{#runs}}
+        labels.push('{{company}}');
+        estimatedData.push(parseFloat('{{estimated_cost}}'.replace('$', '')));
+        actualData.push(parseFloat('{{actual_cost}}'.replace('$', '')));
+        {{/runs}}
+        
+        // Create chart if we have data
+        if (labels.length > 0) {
+            var ctx = document.getElementById('costChart').getContext('2d');
+            var costChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels.reverse(),
+                    datasets: [{
+                        label: 'Estimated Cost',
+                        data: estimatedData.reverse(),
+                        backgroundColor: 'rgba(99, 102, 241, 0.5)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Actual Cost',
+                        data: actualData.reverse(),
+                        backgroundColor: 'rgba(34, 197, 94, 0.5)',
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Estimated vs Actual Costs'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += '$' + context.parsed.y.toFixed(2);
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Highlight rows on hover
+        $('.cost-row').hover(
+            function() {
+                $(this).addClass('table-active');
+            },
+            function() {
+                $(this).removeClass('table-active');
+            }
+        );
+    });
+});
+</script>
+
+{{! Additional CSS }}
+<style>
+.cost-widget .summary-stats .stat-item {
+    padding: 10px;
+    border-right: 1px solid #e5e7eb;
+}
+.cost-widget .summary-stats .stat-item:last-child {
+    border-right: none;
+}
+.cost-widget .variance-badge {
+    font-weight: 600;
+    padding: 4px 8px;
+}
+.cost-widget .text-danger {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+.cost-widget .text-success {
+    background-color: #dcfce7;
+    color: #166534;
+}
+.cost-widget .text-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+.cost-widget .token-info {
+    line-height: 1.2;
+}
+.cost-widget .company-info {
+    line-height: 1.3;
+}
+</style>

@@ -1,0 +1,111 @@
+{
+  "type": "object",
+  "required": ["market_dynamics", "competitive_landscape", "regulatory_environment", "economic_factors", "citations"],
+  "properties": {
+    "market_dynamics": {
+      "type": "object",
+      "required": ["market_size", "growth_rate", "key_trends", "disruptions"],
+      "properties": {
+        "market_size": {"type": "string"},
+        "growth_rate": {"type": "string"},
+        "key_trends": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1
+        },
+        "disruptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["factor", "impact"],
+            "properties": {
+              "factor": {"type": "string"},
+              "impact": {
+                "type": "string",
+                "enum": ["high", "medium", "low"]
+              },
+              "timeline": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "competitive_landscape": {
+      "type": "object",
+      "required": ["main_competitors", "market_position", "competitive_advantages"],
+      "properties": {
+        "main_competitors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "market_share"],
+            "properties": {
+              "name": {"type": "string"},
+              "market_share": {"type": "string"},
+              "strengths": {
+                "type": "array",
+                "items": {"type": "string"}
+              }
+            }
+          }
+        },
+        "market_position": {"type": "string"},
+        "competitive_advantages": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "regulatory_environment": {
+      "type": "object",
+      "required": ["key_regulations", "compliance_status"],
+      "properties": {
+        "key_regulations": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "compliance_status": {
+          "type": "string",
+          "enum": ["compliant", "partial", "non-compliant", "unknown"]
+        },
+        "upcoming_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["regulation", "impact", "timeline"],
+            "properties": {
+              "regulation": {"type": "string"},
+              "impact": {"type": "string"},
+              "timeline": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "economic_factors": {
+      "type": "object",
+      "properties": {
+        "macro_trends": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "currency_exposure": {"type": "string"},
+        "interest_rate_sensitivity": {"type": "string"}
+      }
+    },
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["source_id"],
+        "properties": {
+          "source_id": {"type": "integer"},
+          "quote": {"type": "string"},
+          "page": {"type": "string"},
+          "url": {"type": "string"}
+        }
+      }
+    }
+  }
+}

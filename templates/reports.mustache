@@ -1,0 +1,74 @@
+<h3>{{#str}} viewreports, local_customerintel {{/str}}</h3>
+<table style="width: 100%">
+  <thead style=""><tr><th>ID</th><th>{{#str}} customer, local_customerintel {{/str}}</th><th>{{#str}} target, local_customerintel {{/str}}</th><th>{{#str}} status, local_customerintel {{/str}}</th><th>{{#str}} completed, local_customerintel {{/str}}</th><th>Actions</th></tr></thead>
+  <tbody style="background: #fff; border-radius: 8px;">
+{{#runs}}
+
+    {{#.}}
+    <tr>
+      <td>{{id}}</td>
+      <td>{{customername}}</td>
+      <td>{{targetname}}</td>
+      <td>
+        {{#status_completed}}
+          <span class="badge badge-success">{{status}}</span>
+        {{/status_completed}}
+        {{#status_failed}}
+          <span class="badge badge-danger">{{status}}</span>
+        {{/status_failed}}
+        {{#status_running}}
+          <span class="badge badge-primary">{{status}}</span>
+        {{/status_running}}
+        {{#status_processing}}
+          <span class="badge badge-info">{{status}}</span>
+        {{/status_processing}}
+        {{#status_pending}}
+          <span class="badge badge-secondary">{{status}}</span>
+        {{/status_pending}}
+      </td>
+      <td>{{timecompleted_h}}</td>
+      <td>
+        {{#can_view_report}}
+          <a href="{{report_url}}" class="btn btn-primary">
+            View Report
+            {{#is_processing}}
+              <span class="badge badge-info" style="margin-left: 5px;">
+                <span class="spinner-small"></span> In Progress
+              </span>
+            {{/is_processing}}
+          </a>
+        {{/can_view_report}}
+        {{^can_view_report}}
+          <span class="text-muted">Not available</span>
+        {{/can_view_report}}
+        {{#trace_enabled}}
+          <a href="{{trace_url}}" class="btn btn-secondary" style="color: #00baff !important; background: #fff!important;">View Trace Log</a>
+        {{/trace_enabled}}
+      </td>
+    </tr>
+    {{/.}}
+ 
+{{/runs}}
+ </tbody>
+</table>
+{{^runs}}<em>{{#str}} noruns, local_customerintel {{/str}}</em>{{/runs}}
+
+<style>
+/* M2 Task 0.2: Spinner for in-progress runs */
+.spinner-small {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #7FF6D3;
+    border-radius: 50%;
+    animation: spin-small 1s linear infinite;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+@keyframes spin-small {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>

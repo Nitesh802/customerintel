@@ -1,0 +1,125 @@
+{
+  "type": "object",
+  "required": ["market_position", "competitive_analysis", "differentiation", "competitive_threats", "citations"],
+  "properties": {
+    "market_position": {
+      "type": "object",
+      "required": ["market_share", "ranking", "trend", "segments"],
+      "properties": {
+        "market_share": {"type": "string"},
+        "ranking": {"type": "integer"},
+        "trend": {
+          "type": "string",
+          "enum": ["gaining", "stable", "losing"]
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["segment", "position", "share"],
+            "properties": {
+              "segment": {"type": "string"},
+              "position": {"type": "integer"},
+              "share": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "competitive_analysis": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["competitor", "strengths", "weaknesses", "strategy"],
+        "properties": {
+          "competitor": {"type": "string"},
+          "market_share": {"type": "string"},
+          "strengths": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "weaknesses": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "strategy": {"type": "string"},
+          "threat_level": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          }
+        }
+      }
+    },
+    "differentiation": {
+      "type": "object",
+      "required": ["key_differentiators", "value_proposition", "competitive_advantages"],
+      "properties": {
+        "key_differentiators": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"}
+        },
+        "value_proposition": {"type": "string"},
+        "competitive_advantages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["advantage", "sustainability"],
+            "properties": {
+              "advantage": {"type": "string"},
+              "sustainability": {
+                "type": "string",
+                "enum": ["sustainable", "temporary", "eroding"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "competitive_threats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["threat", "source", "impact", "timeline"],
+        "properties": {
+          "threat": {"type": "string"},
+          "source": {"type": "string"},
+          "impact": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "timeline": {"type": "string"},
+          "mitigation": {"type": "string"}
+        }
+      }
+    },
+    "competitive_responses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["action", "target", "expected_outcome"],
+        "properties": {
+          "action": {"type": "string"},
+          "target": {"type": "string"},
+          "expected_outcome": {"type": "string"},
+          "status": {"type": "string"}
+        }
+      }
+    },
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["source_id"],
+        "properties": {
+          "source_id": {"type": "integer"},
+          "quote": {"type": "string"},
+          "page": {"type": "string"},
+          "url": {"type": "string"}
+        }
+      }
+    }
+  }
+}

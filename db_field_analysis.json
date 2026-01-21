@@ -1,0 +1,235 @@
+{
+  "analysis_metadata": {
+    "date": "2025-10-13",
+    "tables_analyzed": 9,
+    "total_mismatches": 24,
+    "severity_counts": {
+      "critical": 10,
+      "moderate": 8,
+      "minor": 6
+    }
+  },
+  "mismatches": {
+    "critical": [
+      {
+        "table": "local_ci_run",
+        "issue": "Field name mismatch",
+        "xml_field": "startedat",
+        "code_references": "timestarted",
+        "files": [
+          "nb_orchestrator.php:65",
+          "job_queue.php:251-254",
+          "cost_service.php:314",
+          "dashboard.php:314"
+        ],
+        "recommendation": "Rename XML field 'startedat' to 'timestarted' OR update all code to use 'startedat'"
+      },
+      {
+        "table": "local_ci_run",
+        "issue": "Field name mismatch",
+        "xml_field": "finishedat",
+        "code_references": "timecompleted",
+        "files": [
+          "nb_orchestrator.php:84",
+          "job_queue.php:258",
+          "cost_service.php:314,579-580",
+          "dashboard.php:42"
+        ],
+        "recommendation": "Rename XML field 'finishedat' to 'timecompleted' OR update all code to use 'finishedat'"
+      },
+      {
+        "table": "local_ci_run",
+        "issue": "Missing fields in XML",
+        "missing_fields": ["userid", "actualtokens", "actualcost", "timecreated", "timemodified"],
+        "code_references": [
+          "job_queue.php:60 - $run->userid = $userid",
+          "cost_service.php:152-154 - $run->actualtokens, $run->actualcost",
+          "job_queue.php:66-67 - $run->timecreated, $run->timemodified"
+        ],
+        "recommendation": "Add missing fields to install.xml"
+      },
+      {
+        "table": "local_ci_source",
+        "issue": "Missing field in XML",
+        "missing_field": "sourcetype",
+        "code_reference": "versioning_service.php:265 - 'type' => $source->sourcetype",
+        "recommendation": "Field 'sourcetype' referenced but only 'type' exists in XML. Fix code to use 'type'"
+      },
+      {
+        "table": "local_ci_source",
+        "issue": "Missing field in XML",
+        "missing_field": "uploadedfilename",
+        "code_reference": "versioning_service.php:267",
+        "recommendation": "Add 'uploadedfilename' field to XML or remove from code"
+      },
+      {
+        "table": "local_ci_nb_result",
+        "issue": "Missing fields in XML",
+        "missing_fields": ["timecreated", "timemodified"],
+        "code_references": "Test files reference these timestamp fields",
+        "recommendation": "Add timestamp fields for consistency with other tables"
+      },
+      {
+        "table": "local_ci_run",
+        "issue": "Field 'status' value mismatch",
+        "xml_values": "queued, running, succeeded, failed",
+        "code_values": "completed, retrying, cancelled, archived",
+        "files": [
+          "job_queue.php:109-114 - checks 'completed'",
+          "job_queue.php:202,452 - uses 'retrying', 'archived'",
+          "job_queue.php:409 - uses 'cancelled'"
+        ],
+        "recommendation": "Update XML comment to include all status values: 'queued, running, completed, failed, retrying, cancelled, archived'"
+      },
+      {
+        "table": "local_ci_company",
+        "issue": "Fields referenced in tests but not in XML",
+        "missing_fields": ["description", "domain", "createdbyuserid"],
+        "test_file": "reuse_logic_test.php:87-90",
+        "recommendation": "Either add fields to XML or update test files to not use these fields"
+      },
+      {
+        "table": "local_ci_source",
+        "issue": "Field 'timemodified' missing in XML",
+        "code_reference": "source_service.php:487",
+        "recommendation": "Add 'timemodified' field to maintain consistency"
+      },
+      {
+        "table": "local_ci_source_chunk",
+        "issue": "Table referenced but not defined in XML",
+        "code_reference": "source_service.php:693 (commented out)",
+        "recommendation": "Add local_ci_source_chunk table definition to XML if implementing chunking"
+      }
+    ],
+    "moderate": [
+      {
+        "table": "local_ci_run",
+        "issue": "Index missing for frequently queried field",
+        "field": "timecompleted",
+        "queries": "Used in ORDER BY and WHERE clauses",
+        "recommendation": "Add index on 'timecompleted' field"
+      },
+      {
+        "table": "local_ci_run",
+        "issue": "Composite index needed",
+        "fields": ["companyid", "status"],
+        "usage": "Frequently queried together",
+        "recommendation": "Add composite index on (companyid, status)"
+      },
+      {
+        "table": "local_ci_source",
+        "issue": "Index missing for deduplication queries",
+        "fields": ["companyid", "hash"],
+        "usage": "source_service.php:161 - checks for duplicates",
+        "recommendation": "Add composite index on (companyid, hash)"
+      },
+      {
+        "table": "local_ci_snapshot",
+        "issue": "Missing indexes for performance",
+        "fields": ["companyid", "timecreated"],
+        "usage": "Frequently queried with ORDER BY",
+        "recommendation": "Add composite index for version history queries"
+      },
+      {
+        "table": "local_ci_telemetry",
+        "issue": "Index needed for aggregation queries",
+        "fields": ["runid", "metrickey"],
+        "recommendation": "Add composite index on (runid, metrickey)"
+      },
+      {
+        "table": "local_ci_comparison",
+        "issue": "Missing foreign key constraints in XML",
+        "fields": ["basecustomersnapshotid", "targetsnapshotid"],
+        "recommendation": "Add foreign key constraints to snapshot table"
+      },
+      {
+        "table": "local_ci_settings",
+        "issue": "Table not used in code",
+        "observation": "No references found in PHP code",
+        "recommendation": "Remove table from XML or implement usage"
+      },
+      {
+        "table": "local_ci_run",
+        "issue": "Missing foreign key for reusedfromrunid",
+        "field": "reusedfromrunid",
+        "recommendation": "Add self-referencing foreign key constraint"
+      }
+    ],
+    "minor": [
+      {
+        "table": "local_ci_run",
+        "issue": "Data type consideration",
+        "field": "estcost, actualcost",
+        "current": "NUMBER(10,4)",
+        "consideration": "Verify 4 decimal places sufficient for currency",
+        "recommendation": "Consider NUMBER(12,4) for larger amounts"
+      },
+      {
+        "table": "local_ci_source",
+        "issue": "Field length",
+        "field": "hash",
+        "current": "CHAR(64)",
+        "usage": "SHA1 produces 40 chars, SHA256 produces 64",
+        "recommendation": "Document hash algorithm in comment"
+      },
+      {
+        "table": "local_ci_nb_result",
+        "issue": "Field length",
+        "field": "nbcode",
+        "current": "CHAR(10)",
+        "usage": "Only needs 4 chars for 'NB15'",
+        "recommendation": "Could reduce to CHAR(4) for efficiency"
+      },
+      {
+        "table": "local_ci_company",
+        "issue": "Field length",
+        "field": "ticker",
+        "current": "CHAR(20)",
+        "typical": "Most tickers are 1-5 chars",
+        "recommendation": "CHAR(10) would be sufficient"
+      },
+      {
+        "table": "local_ci_run",
+        "issue": "Default value",
+        "field": "status",
+        "current_default": "queued",
+        "recommendation": "Confirm 'queued' is correct initial status"
+      },
+      {
+        "table": "all tables",
+        "issue": "Timestamp consistency",
+        "observation": "Mix of 'timecreated/timemodified' pattern",
+        "recommendation": "Add timemodified to all tables for consistency"
+      }
+    ]
+  },
+  "summary": {
+    "most_critical": [
+      "local_ci_run has field name mismatches: 'startedat' vs 'timestarted', 'finishedat' vs 'timecompleted'",
+      "local_ci_run missing critical fields: userid, actualtokens, actualcost, timecreated, timemodified",
+      "Status values in code don't match XML comments (completed vs succeeded)",
+      "local_ci_source_chunk table referenced but not defined"
+    ],
+    "recommendations": [
+      "1. URGENT: Fix field name mismatches in local_ci_run table",
+      "2. URGENT: Add missing fields to local_ci_run (actualtokens, actualcost, etc.)",
+      "3. Update status field comments to reflect all possible values",
+      "4. Add missing indexes for performance optimization",
+      "5. Add local_ci_source_chunk table if implementing chunking",
+      "6. Consider removing local_ci_settings table if not needed",
+      "7. Add timemodified field to tables missing it for consistency"
+    ],
+    "sql_fixes_needed": [
+      "ALTER TABLE local_ci_run RENAME COLUMN startedat TO timestarted;",
+      "ALTER TABLE local_ci_run RENAME COLUMN finishedat TO timecompleted;",
+      "ALTER TABLE local_ci_run ADD COLUMN userid INT(10);",
+      "ALTER TABLE local_ci_run ADD COLUMN actualtokens INT(10);",
+      "ALTER TABLE local_ci_run ADD COLUMN actualcost NUMBER(10,4);",
+      "ALTER TABLE local_ci_run ADD COLUMN timecreated INT(10) NOT NULL;",
+      "ALTER TABLE local_ci_run ADD COLUMN timemodified INT(10) NOT NULL;",
+      "CREATE INDEX idx_run_timecompleted ON local_ci_run(timecompleted);",
+      "CREATE INDEX idx_run_company_status ON local_ci_run(companyid, status);",
+      "CREATE INDEX idx_source_company_hash ON local_ci_source(companyid, hash);"
+    ]
+  }
+}

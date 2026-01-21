@@ -1,0 +1,680 @@
+/* ============================================
+   CUSTOMER INTEL RUBI - REPORT STYLING
+   M2 Phase 1 - Energy Exemplar Style
+   November 17, 2025 - CORRECTED CSS (v2)
+   Higher specificity to override Moodle defaults
+   ============================================ */
+
+/* Target the report container specifically */
+.report-container .report-content .section h2,
+.report-container .report-content div.section > h2 {
+    color: #1f2937 !important;
+    margin-bottom: 20px !important;
+    font-size: 1.6em !important;
+    font-weight: 600 !important;
+    padding-bottom: 10px !important;
+    border-bottom: 2px solid #7FF6D3 !important;
+}
+
+.report-container .report-content .section h3,
+.report-container .report-content div.section > h3 {
+    margin-top: 20px !important;
+    margin-bottom: 12px !important;
+    color: #495057 !important;
+    font-size: 1.2em !important;
+    font-weight: 600 !important;
+}
+
+.report-container .report-content .section h4,
+.report-container .report-content div.section > h4 {
+    margin-top: 15px !important;
+    margin-bottom: 10px !important;
+    color: #6c757d !important;
+    font-size: 1.05em !important;
+    font-weight: 600 !important;
+}
+
+/* Section Cards */
+.report-container .report-content .section,
+.report-container .report-content div.section {
+    margin: 30px 0 !important;
+    padding: 30px !important;
+    background: white !important;
+    border-radius: 8px !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+}
+
+/* Report Header */
+.report-container .report-header {
+    background: #2A2A2A !important;
+    color: white !important;
+    padding: 30px 40px 20px !important;
+    border-radius: 8px 8px 0 0 !important;
+    box-shadow: 0px 3px 0px #7FF6D3 !important;
+}
+
+.report-container .report-header h1 {
+    font-size: 28px !important;
+    margin-bottom: 8px !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+}
+
+.report-container .report-subtitle {
+    font-size: 11px !important;
+    color: #A3A3A3 !important;
+    font-weight: 400 !important;
+}
+
+/* Content Area */
+.report-container .report-content {
+    padding: 40px !important;
+}
+
+/* Paragraphs - Default styling */
+.report-container .report-content .section p,
+.report-container .report-content div.section > p {
+    margin-bottom: 15px !important;
+    color: #374151 !important;
+    line-height: 1.7 !important;
+}
+
+/* NOVEMBER 17 FIX: Override any nth-of-type selectors that cause wrong backgrounds */
+.report-container .report-content .section p:nth-of-type(n) {
+    background: none !important;
+    border-left: none !important;
+    padding: 0 !important;
+}
+
+/* NOVEMBER 17 FIX: Ensure citations NEVER get backgrounds */
+.report-container .report-content .section p:has(sup),
+.report-container .report-content .section p:has(a[href*="#citation"]) {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* Citations - NOV 17 FIX: Consistent styling, never bold */
+.report-container .report-content .citation-ref,
+.report-container .report-content .section sup,
+.report-container .report-content .section sup a,
+.report-container .report-content .section a[href*="#citation"] {
+    font-weight: 400 !important;  /* Never bold */
+    font-size: 0.85em !important;
+    background: none !important;
+    color: #059669 !important;
+    text-decoration: none !important;
+}
+
+.report-container .report-content .citation-ref {
+    display: inline-block !important;
+    padding: 2px 6px !important;
+    background: #f8f9fa !important;
+    border-left: 2px solid #7FF6D3 !important;
+    border-radius: 3px !important;
+    font-size: 0.85em !important;
+    color: #6c757d !important;
+    margin: 0 2px !important;
+}
+
+/* Lists */
+.report-container .report-content .section ul,
+.report-container .report-content .section ol {
+    margin: 15px 0 15px 25px !important;
+    color: #374151 !important;
+}
+
+.report-container .report-content .section li {
+    margin-bottom: 8px !important;
+    line-height: 1.6 !important;
+}
+
+/* Strong text - Default (for inline emphasis, not headers) */
+.report-container .report-content .section strong {
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+}
+
+/* Links */
+.report-container .report-content .section a {
+    color: #667eea !important;
+    text-decoration: none !important;
+}
+
+.report-container .report-content .section a:hover {
+    text-decoration: underline !important;
+}
+
+/* Tables */
+.report-container .report-content .section table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 20px 0 !important;
+    font-size: 0.95em !important;
+}
+
+.report-container .report-content .section th {
+    background: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    padding: 12px !important;
+    text-align: left !important;
+    font-weight: 600 !important;
+    color: #495057 !important;
+}
+
+.report-container .report-content .section td {
+    border: 1px solid #dee2e6 !important;
+    padding: 10px 12px !important;
+    color: #6c757d !important;
+}
+
+/* Executive Summary */
+.report-container .report-content #executive-summary {
+    background: linear-gradient(135deg, #2A2A2A 0%, #4A4A4A 100%) !important;
+    color: #FFF9E6 !important;
+    margin-top: 0 !important;
+    border: none !important;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15) !important;
+    border-left: 4px solid #7FF6D3 !important;
+}
+
+.report-container .report-content #executive-summary h2 {
+    color: white !important;
+    border-bottom-color: rgba(127, 246, 211, 0.3) !important;
+}
+
+.report-container .report-content #executive-summary p {
+    color: #FFF9E6 !important;
+}
+
+.report-container .report-content #executive-summary strong {
+    color: white !important;
+}
+
+/* Highlighted Sections (3, 6, 7) */
+.report-container .report-content .section.bg-lavender {
+    background: #F3F1FF !important;
+    border-left: 4px solid #8B7BFF !important;
+}
+
+.report-container .report-content .section.bg-mint {
+    background: #E8FFF8 !important;
+    border-left: 4px solid #7FF6D3 !important;
+}
+
+.report-container .report-content .section.bg-peach {
+    background: #FFF4E8 !important;
+    border-left: 4px solid #FFB88C !important;
+}
+
+/* M3 Modular Components Styling */
+.fact-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+    gap: 15px !important;
+    margin: 20px 0 !important;
+}
+
+.fact-item {
+    background: #f8f9fa !important;
+    padding: 15px !important;
+    border-radius: 6px !important;
+    border-left: 3px solid #7FF6D3 !important;
+}
+
+.fact-label {
+    font-weight: 600 !important;
+    color: #495057 !important;
+    font-size: 0.9em !important;
+    margin-bottom: 5px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.fact-value {
+    color: #1f2937 !important;
+    font-size: 1em !important;
+}
+
+.highlights-box {
+    background: #FFF9E6 !important;
+    border-left: 4px solid #FFB88C !important;
+    padding: 20px !important;
+    margin: 20px 0 !important;
+    border-radius: 6px !important;
+}
+
+.highlights-box h3 {
+    color: #D97706 !important;
+    font-size: 1.1em !important;
+    margin-bottom: 12px !important;
+}
+
+.bullet-list {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin: 15px 0 !important;
+}
+
+.bullet-list li {
+    padding-left: 30px !important;
+    position: relative !important;
+    margin-bottom: 12px !important;
+}
+
+.bullet-list li:before {
+    content: "→" !important;
+    position: absolute !important;
+    left: 5px !important;
+    color: #7FF6D3 !important;
+    font-weight: bold !important;
+}
+
+/* M3.5 CVS-Style Components */
+.perf-gap {
+    background: #FFF4E8 !important;
+    border-left: 4px solid #FFB88C !important;
+    padding: 15px 20px !important;
+    margin: 15px 0 !important;
+    border-radius: 6px !important;
+}
+
+.perf-gap strong {
+    color: #D97706 !important;
+}
+
+.timeline {
+    background: #F0F9FF !important;
+    border-left: 4px solid #7FF6D3 !important;
+    padding: 15px 20px !important;
+    margin: 15px 0 !important;
+    border-radius: 6px !important;
+}
+
+.timeline strong {
+    color: #0891B2 !important;
+}
+
+.accountability {
+    background: #F3F1FF !important;
+    border-left: 4px solid #8B7BFF !important;
+    padding: 15px 20px !important;
+    margin: 15px 0 !important;
+    border-radius: 6px !important;
+}
+
+.accountability strong {
+    color: #7C3AED !important;
+}
+
+/* M3 Blockquotes (if used) */
+.section blockquote {
+    border-left: 4px solid #7FF6D3 !important;
+    padding-left: 20px !important;
+    margin: 20px 0 !important;
+    font-style: italic !important;
+    color: #6c757d !important;
+}
+
+/* M3 Code blocks (if used) */
+.section pre,
+.section code {
+    background: #f8f9fa !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 0.9em !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .report-container .report-header {
+        padding: 20px !important;
+    }
+
+    .report-container .report-content {
+        padding: 20px !important;
+    }
+
+    .report-container .report-content .section,
+    .report-container .report-content div.section {
+        padding: 20px !important;
+    }
+
+    .fact-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .report-container .report-content th,
+    .report-container .report-content td {
+        padding: 8px 10px !important;
+    }
+}
+
+/* ============================================
+   CORRECTED COMPREHENSIVE FIXES - November 17, 2025 v2
+   Issues: Header boldness, spacing, opportunity title
+   
+   CRITICAL FIX: Removed :first-of-type rule that was making
+   subsection header "1. What Is Happening" huge by treating
+   it as opportunity title
+   ============================================ */
+
+/* ============================================
+   1. SUBSECTION HEADERS (1-7) - BOLD & CONSISTENT
+   ============================================ */
+
+/* All subsection headers wrapped in <strong> tags - BOLD */
+.section p strong:only-child,
+#executive-summary p strong:only-child {
+    display: block !important;
+    font-weight: 700 !important;  /* REDUCED from 900 - more readable */
+    font-size: 1.1em !important;  /* REDUCED from 1.15em - consistent size */
+    color: #1f2937 !important;
+    margin-bottom: 8px !important;
+    line-height: 1.4 !important;
+}
+
+/* Executive summary headers - lighter color on dark background */
+#executive-summary p strong:only-child {
+    color: #FFF9E6 !important;
+}
+
+/* Ensure consistency across all positions */
+.section p:nth-child(n) strong:only-child,
+#executive-summary p:nth-child(n) strong:only-child {
+    font-weight: 700 !important;
+    font-size: 1.1em !important;
+}
+
+
+/* ============================================
+   2. SPACING AFTER SUBSECTION HEADERS
+   ============================================ */
+
+/* Paragraph containing subsection header - controlled spacing */
+.section p:has(strong:only-child),
+#executive-summary p:has(strong:only-child) {
+    margin-top: 18px !important;  /* Space above header */
+    margin-bottom: 0px !important;  /* NO space below - kills gap */
+}
+
+/* Content paragraph immediately after header - tight spacing */
+.section p:has(strong:only-child) + p,
+#executive-summary p:has(strong:only-child) + p {
+    margin-top: 8px !important;  /* Small 8px gap */
+    margin-bottom: 15px !important;  /* Normal bottom spacing */
+}
+
+
+/* ============================================
+   3. GENERAL PARAGRAPH SPACING
+   ============================================ */
+
+/* Reset all paragraph margins first */
+.section p,
+#executive-summary p {
+    margin-top: 0 !important;
+    margin-bottom: 15px !important;
+    line-height: 1.7 !important;
+}
+
+/* Remove empty paragraphs */
+.section p:empty,
+#executive-summary p:empty {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Section H2 spacing */
+.section h2,
+#executive-summary h2 {
+    margin-bottom: 15px !important;  /* Reduced from 20px */
+}
+
+
+/* ============================================
+   4. ENSURE NO CONFLICTING RULES
+   ============================================ */
+
+/* Override any nth-child that could interfere */
+.section p:nth-of-type(n) {
+    background: none !important;
+    border-left: none !important;
+    padding: 0 !important;
+}
+
+/* Regular strong tags (inline, not headers) - subtle */
+.section p strong:not(:only-child),
+#executive-summary p strong:not(:only-child) {
+    font-weight: 600 !important;
+    font-size: 1em !important;
+    background: none !important;
+}
+
+/* Citations - never bold, never backgrounds */
+.section sup,
+.section sup a,
+.section a[href*="#citation"],
+.citations-section p strong {
+    font-weight: 400 !important;
+    background: none !important;
+}
+
+/* ============================================
+   5. OPPORTUNITY TITLE - REMOVED PROBLEMATIC RULE
+   
+   The :first-of-type selector was incorrectly matching
+   subsection headers. Opportunity titles should be styled
+   via server-side classes or left as default paragraphs.
+   ============================================ */
+
+/* REMOVED: .section > p:first-of-type rule that caused issue */
+/* If opportunity titles need special styling, add a class
+   server-side: <p class="opportunity-title">Title</p> */
+
+/* ============================================
+   M3.5 V3/CVS FORMAT - ORDERED LIST STYLING
+   November 18, 2025 - Phase 1
+   ============================================ */
+
+/* Ordered list container */
+.report-container .report-content .section ol,
+.report-container .report-content #executive-summary ol {
+    counter-reset: item !important;
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin: 20px 0 !important;
+}
+
+/* List items */
+.report-container .report-content .section ol li,
+.report-container .report-content #executive-summary ol li {
+    counter-increment: item !important;
+    margin-bottom: 20px !important;
+    padding-left: 40px !important;
+    position: relative !important;
+    line-height: 1.7 !important;
+}
+
+/* Custom numbering */
+.report-container .report-content .section ol li:before,
+.report-container .report-content #executive-summary ol li:before {
+    content: counter(item) "." !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    font-weight: 700 !important;
+    font-size: 1.1em !important;
+    color: #1f2937 !important;
+}
+
+/* Executive summary numbering - lighter on dark background */
+.report-container .report-content #executive-summary ol li:before {
+    color: #7FF6D3 !important;
+}
+
+/* Bold headers within list items */
+.report-container .report-content .section ol li b,
+.report-container .report-content #executive-summary ol li b {
+    font-weight: 700 !important;
+    font-size: 1.1em !important;
+    color: #1f2937 !important;
+    display: inline !important;
+}
+
+/* Executive summary bold headers - lighter color */
+.report-container .report-content #executive-summary ol li b {
+    color: #FFF9E6 !important;
+}
+
+/* Line breaks within list items */
+.report-container .report-content .section ol li br,
+.report-container .report-content #executive-summary ol li br {
+    display: block !important;
+    content: "" !important;
+    margin-bottom: 8px !important;
+}
+
+/* ============================================
+   M3.5 PHASE 2 COMPREHENSIVE FIX
+   November 18, 2025
+   ============================================ */
+
+/* Executive Summary opportunity title - 16.5px, bold, NOT italic */
+.report-container .report-content #executive-summary > b:first-of-type,
+.report-container .report-content #executive-summary > strong:first-of-type {
+    display: block !important;
+    font-weight: 700 !important;
+    font-size: 16.5px !important;
+    color: #FFF9E6 !important;
+    margin-bottom: 16px !important;
+    line-height: 1.3 !important;
+    font-style: normal !important;  /* Ensure NOT italic */
+}
+
+/* NB section opportunity titles - 16.5px, bold, NOT italic */
+.report-container .report-content .section > b:first-of-type,
+.report-container .report-content .section > strong:first-of-type {
+    display: block !important;
+    font-weight: 700 !important;
+    font-size: 16.5px !important;
+    color: #1f2937 !important;
+    margin-bottom: 16px !important;
+    line-height: 1.3 !important;
+    font-style: normal !important;  /* Ensure NOT italic */
+}
+
+/* Summary framing paragraphs (the paragraph AFTER title, BEFORE <ol>) */
+/* Keep these simple - no italic */
+.report-container .report-content .section > p {
+    font-size: 0.95em !important;
+    line-height: 1.6 !important;
+    margin-bottom: 16px !important;
+    margin-top: 0 !important;
+    color: #4b5563 !important;
+}
+
+.report-container .report-content #executive-summary > p {
+    font-size: 0.95em !important;
+    line-height: 1.6 !important;
+    margin-bottom: 16px !important;
+    margin-top: 0 !important;
+    color: #6b7280 !important;
+}
+
+/* ============================================
+   INSIGHT CLUSTERS FORMAT (November 19, 2025)
+   Replaces M3.5 green fact card styling
+   ============================================ */
+
+/* Bold insight sentences (cluster headers) */
+.report-container .report-content .section p b,
+.report-container .report-content .section p strong,
+.report-container .report-content #executive-summary p b,
+.report-container .report-content #executive-summary p strong {
+    font-weight: 700 !important;
+    font-size: 1.1em !important;
+    color: #1f2937 !important;
+    display: inline !important;
+}
+
+/* Executive summary bold text on dark background */
+.report-container .report-content #executive-summary p b,
+.report-container .report-content #executive-summary p strong {
+    color: #FFF9E6 !important;
+}
+
+/* Paragraph spacing for Insight Clusters */
+.report-container .report-content .section p,
+.report-container .report-content #executive-summary p {
+    margin-top: 0 !important;
+    margin-bottom: 12px !important;
+    line-height: 1.7 !important;
+}
+
+/* Add spacing before insight cluster headers (bold sentence paragraphs) */
+.report-container .report-content .section p:has(b:first-child):not(:first-child),
+.report-container .report-content .section p:has(strong:first-child):not(:first-child),
+.report-container .report-content #executive-summary p:has(b:first-child):not(:first-child),
+.report-container .report-content #executive-summary p:has(strong:first-child):not(:first-child) {
+    margin-top: 25px !important;
+}
+
+/* Plain bullet lists (NO green borders, NO backgrounds) */
+.report-container .report-content .section ul,
+.report-container .report-content #executive-summary ul {
+    list-style: disc !important;
+    padding-left: 25px !important;
+    margin: 12px 0 25px 0 !important;
+}
+
+.report-container .report-content .section ul li,
+.report-container .report-content #executive-summary ul li {
+    background: none !important;
+    border-left: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    font-size: 0.95em !important;
+    line-height: 1.6 !important;
+    color: #374151 !important;
+    box-shadow: none !important;
+    margin-bottom: 8px !important;
+}
+
+/* Executive summary bullet text color */
+.report-container .report-content #executive-summary ul li {
+    color: #FFF9E6 !important;
+}
+
+/* Bold text within bullets (if any) */
+.report-container .report-content .section ul li b,
+.report-container .report-content .section ul li strong,
+.report-container .report-content #executive-summary ul li b,
+.report-container .report-content #executive-summary ul li strong {
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+}
+
+.report-container .report-content #executive-summary ul li b,
+.report-container .report-content #executive-summary ul li strong {
+    color: #FFFFFF !important;
+}
+
+/* Ordered list spacing (legacy - for sections still using numbered lists) */
+.report-container .report-content .section ol,
+.report-container .report-content #executive-summary ol {
+    margin-top: 16px !important;
+    margin-bottom: 20px !important;
+}
+
+/* Override any conflicting rules that might add italic */
+.report-container .report-content .section > b,
+.report-container .report-content .section > strong,
+.report-container .report-content #executive-summary > b,
+.report-container .report-content #executive-summary > strong {
+    font-style: normal !important;
+}

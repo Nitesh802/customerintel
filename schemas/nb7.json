@@ -1,0 +1,113 @@
+{
+  "type": "object",
+  "required": ["operational_metrics", "supply_chain", "quality", "productivity", "citations"],
+  "properties": {
+    "operational_metrics": {
+      "type": "object",
+      "required": ["efficiency_score", "utilization_rate", "cycle_time"],
+      "properties": {
+        "efficiency_score": {"type": "string"},
+        "utilization_rate": {"type": "number"},
+        "cycle_time": {"type": "string"},
+        "on_time_delivery": {"type": "number"},
+        "inventory_turnover": {"type": "number"}
+      }
+    },
+    "supply_chain": {
+      "type": "object",
+      "required": ["structure", "resilience", "optimization_initiatives"],
+      "properties": {
+        "structure": {"type": "string"},
+        "resilience": {
+          "type": "string",
+          "enum": ["highly_resilient", "resilient", "moderate", "vulnerable"]
+        },
+        "key_suppliers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["supplier", "criticality"],
+            "properties": {
+              "supplier": {"type": "string"},
+              "criticality": {
+                "type": "string",
+                "enum": ["critical", "important", "standard"]
+              },
+              "risk_level": {"type": "string"}
+            }
+          }
+        },
+        "optimization_initiatives": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": ["defect_rate", "customer_satisfaction", "certifications"],
+      "properties": {
+        "defect_rate": {"type": "string"},
+        "customer_satisfaction": {"type": "string"},
+        "certifications": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "quality_initiatives": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "productivity": {
+      "type": "object",
+      "required": ["revenue_per_employee", "automation_level", "improvement_programs"],
+      "properties": {
+        "revenue_per_employee": {"type": "string"},
+        "automation_level": {
+          "type": "string",
+          "enum": ["highly_automated", "moderate", "low", "manual"]
+        },
+        "improvement_programs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["program", "expected_impact"],
+            "properties": {
+              "program": {"type": "string"},
+              "expected_impact": {"type": "string"},
+              "status": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "operational_excellence_initiatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["initiative", "scope", "expected_savings"],
+        "properties": {
+          "initiative": {"type": "string"},
+          "scope": {"type": "string"},
+          "expected_savings": {"type": "string"},
+          "timeline": {"type": "string"}
+        }
+      }
+    },
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["source_id"],
+        "properties": {
+          "source_id": {"type": "integer"},
+          "quote": {"type": "string"},
+          "page": {"type": "string"},
+          "url": {"type": "string"}
+        }
+      }
+    }
+  }
+}

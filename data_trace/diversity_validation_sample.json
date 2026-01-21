@@ -1,0 +1,178 @@
+{
+  "validation_timestamp": "2024-10-22T14:30:00Z",
+  "run_id": 789,
+  "company_id": 42,
+  "company_name": "Test Company ABC123",
+  "assessment": {
+    "overall_status": "PASS",
+    "score": 78.5,
+    "grade": "B+",
+    "rebalancing_recommended": false,
+    "synthesis_clearance": "APPROVED"
+  },
+  "current_metrics": {
+    "domain_diversity_score": 0.785,
+    "unique_domains": 12,
+    "max_domain_concentration": 0.184,
+    "total_citations": 47,
+    "category_distribution": {
+      "financial": 0.38,
+      "news": 0.32,
+      "analyst": 0.18,
+      "company": 0.12
+    },
+    "top_domains": {
+      "bloomberg.com": 0.184,
+      "reuters.com": 0.156,
+      "sec.gov": 0.149,
+      "wsj.com": 0.128,
+      "ft.com": 0.089
+    },
+    "confidence_metrics": {
+      "average": 0.74,
+      "high_confidence_count": 32,
+      "low_confidence_count": 4,
+      "high_confidence_ratio": 0.68
+    },
+    "recency_metrics": {
+      "recent_sources_count": 14,
+      "recent_sources_ratio": 0.30,
+      "oldest_source_days": 365,
+      "average_age_days": 67
+    }
+  },
+  "threshold_analysis": {
+    "diversity_score": {
+      "value": 0.785,
+      "threshold": 0.75,
+      "status": "PASS",
+      "margin": 0.035,
+      "description": "Diversity score exceeds minimum threshold"
+    },
+    "unique_domains": {
+      "value": 12,
+      "threshold": 10,
+      "status": "PASS", 
+      "margin": 2,
+      "description": "Sufficient domain variety for balanced analysis"
+    },
+    "domain_concentration": {
+      "value": 0.184,
+      "threshold": 0.25,
+      "status": "PASS",
+      "margin": 0.066,
+      "description": "No excessive concentration from single domain"
+    },
+    "confidence_ratio": {
+      "value": 0.68,
+      "threshold": 0.60,
+      "status": "PASS",
+      "margin": 0.08,
+      "description": "High confidence citation ratio meets standard"
+    }
+  },
+  "trend_analysis": {
+    "previous_run_id": 756,
+    "time_delta_hours": 72,
+    "comparison_available": true,
+    "diversity_trend": {
+      "score_delta": 0.116,
+      "domains_delta": 4,
+      "concentration_delta": -0.128,
+      "trend_direction": "IMPROVING",
+      "trend_strength": "STRONG"
+    },
+    "moving_averages": {
+      "diversity_score_7day": 0.763,
+      "unique_domains_7day": 10.8,
+      "rebalancing_frequency_7day": 0.43,
+      "runs_analyzed": 5
+    },
+    "historical_context": {
+      "best_score_30day": 0.812,
+      "worst_score_30day": 0.623,
+      "average_score_30day": 0.734,
+      "improvement_trend": true
+    }
+  },
+  "rebalancing_impact": {
+    "was_applied": true,
+    "strategy_used": "domain_diversification",
+    "execution_time_ms": 1247,
+    "citations_processed": 47,
+    "citations_modified": 12,
+    "modification_ratio": 0.255,
+    "improvement_metrics": {
+      "score_improvement": 0.116,
+      "concentration_reduction": 0.128,
+      "domains_added": 4,
+      "effectiveness_rating": "HIGH"
+    },
+    "pre_rebalancing": {
+      "diversity_score": 0.669,
+      "unique_domains": 8,
+      "max_concentration": 0.312
+    }
+  },
+  "quality_flags": [
+    {
+      "type": "INFO",
+      "category": "DIVERSITY",
+      "message": "Domain diversity meets all quality thresholds",
+      "severity": "LOW"
+    },
+    {
+      "type": "WARNING",
+      "category": "CONCENTRATION", 
+      "message": "Financial sources represent 38% of citations - monitor for over-concentration",
+      "severity": "MEDIUM"
+    },
+    {
+      "type": "INFO",
+      "category": "CONFIDENCE",
+      "message": "High confidence citation ratio (68%) supports reliable synthesis",
+      "severity": "LOW"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "action": "Continue current diversification strategy",
+      "rationale": "Rebalancing showing strong positive impact"
+    },
+    {
+      "priority": "MEDIUM", 
+      "action": "Monitor bloomberg.com concentration in future runs",
+      "rationale": "Single largest source at 18.4% approaching watch threshold"
+    },
+    {
+      "priority": "LOW",
+      "action": "Consider expanding analyst report inclusion",
+      "rationale": "Analyst sources only 18% of total, could improve balance"
+    }
+  ],
+  "validation_details": {
+    "validator_version": "1.0.0",
+    "data_sources_checked": [
+      "local_ci_citation_metrics",
+      "local_ci_artifact.diversity_metrics",
+      "local_ci_telemetry"
+    ],
+    "artifacts_found": 3,
+    "telemetry_records": 15,
+    "validation_duration_ms": 247,
+    "cache_used": false,
+    "data_completeness": {
+      "citation_metrics": "COMPLETE",
+      "artifacts": "COMPLETE", 
+      "telemetry": "COMPLETE",
+      "missing_fields": []
+    }
+  },
+  "metadata": {
+    "schema_version": "1.0",
+    "generated_by": "validate_evidence_diversity.php",
+    "next_validation": "2024-10-22T20:30:00Z",
+    "retention_expires": "2025-01-20T14:30:00Z"
+  }
+}

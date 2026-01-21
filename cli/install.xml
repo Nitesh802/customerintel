@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/customerintel/db" VERSION="2025203007" COMMENT="XMLDB file for Customer Intelligence Dashboard with Citation Enhancement - Complete Schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+
+    <!-- Company table -->
+    <TABLE NAME="local_ci_company" COMMENT="Company repository for Customer and Target companies">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="ticker" TYPE="char" LENGTH="10"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="20" DEFAULT="unknown" COMMENT="customer, target, or unknown"/>
+        <FIELD NAME="website" TYPE="char" LENGTH="255"/>
+        <FIELD NAME="sector" TYPE="char" LENGTH="100"/>
+        <FIELD NAME="metadata" TYPE="text"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="name_idx" UNIQUE="false" FIELDS="name"/>
+        <INDEX NAME="type_idx" UNIQUE="false" FIELDS="type"/>
+        <INDEX NAME="ticker_idx" UNIQUE="false" FIELDS="ticker"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Source table (enhanced for Slice 4) -->
+    <TABLE NAME="local_ci_source" COMMENT="Sources for company intelligence with citation enhancement">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="20" NOTNULL="true" COMMENT="url, file, or manual_text"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="url" TYPE="text"/>
+        <FIELD NAME="uploadedfilename" TYPE="char" LENGTH="255"/>
+        <FIELD NAME="fileid" TYPE="int" LENGTH="10"/>
+        <FIELD NAME="publishedat" TYPE="int" LENGTH="10"/>
+        <FIELD NAME="addedbyuserid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="approved" TYPE="int" LENGTH="1" DEFAULT="1"/>
+        <FIELD NAME="rejected" TYPE="int" LENGTH="1" DEFAULT="0"/>
+        <FIELD NAME="hash" TYPE="char" LENGTH="64" COMMENT="SHA256 hash for deduplication"/>
+        <FIELD NAME="domain" TYPE="char" LENGTH="255" COMMENT="Domain for citation authority scoring"/>
+        <FIELD NAME="confidence" TYPE="number" LENGTH="5" DECIMALS="2" COMMENT="Citation confidence score 0.00-1.00"/>
+        <FIELD NAME="source_type" TYPE="char" LENGTH="20" COMMENT="regulatory|news|analyst|company|industry"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="companyid" TYPE="foreign" FIELDS="companyid" REFTABLE="local_ci_company" REFFIELDS="id"/>
+        <KEY NAME="addedbyuserid" TYPE="foreign" FIELDS="addedbyuserid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="fileid" TYPE="foreign" FIELDS="fileid" REFTABLE="files" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="hash_idx" UNIQUE="false" FIELDS="hash"/>
+        <INDEX NAME="company_hash_idx" UNIQUE="false" FIELDS="companyid, hash"/>
+        <INDEX NAME="type_idx" UNIQUE="false" FIELDS="type"/>
+        <INDEX NAME="domain_idx" UNIQUE="false" FIELDS="domain" COMMENT="Index for citation domain lookups"/>
+        <INDEX NAME="confidence_idx" UNIQUE="false" FIELDS="confidence" COMMENT="Index for confidence-based queries"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Source Chunk table -->
+    <TABLE NAME="local_ci_source_chunk" COMMENT="Text chunks for source retrieval">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="sourceid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="chunkindex" TYPE="int" LENGTH="5" NOTNULL="true"/>
+        <FIELD NAME="chunktext" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="hash" TYPE="char" LENGTH="64"/>
+        <FIELD NAME="tokens" TYPE="int" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="metadata" TYPE="text" COMMENT="JSON metadata"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="sourceid" TYPE="foreign" FIELDS="sourceid" REFTABLE="local_ci_source" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="source_idx" UNIQUE="false" FIELDS="sourceid"/>
+        <INDEX NAME="source_chunk_idx" UNIQUE="false" FIELDS="sourceid, chunkindex"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Run table -->
+    <TABLE NAME="local_ci_run" COMMENT="Intelligence run tracking">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="targetcompanyid" TYPE="int" LENGTH="10"/>
+        <FIELD NAME="initiatedbyuserid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="User executing the run"/>
+        <FIELD NAME="mode" TYPE="char" LENGTH="20" DEFAULT="full" COMMENT="full, partial, or comparison"/>
+        <FIELD NAME="reusedfromrunid" TYPE="int" LENGTH="10"/>
+        <FIELD NAME="esttokens" TYPE="int" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="estcost" TYPE="number" LENGTH="12" DECIMALS="4" DEFAULT="0"/>
+        <FIELD NAME="actualtokens" TYPE="int" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="actualcost" TYPE="number" LENGTH="12" DECIMALS="4" DEFAULT="0"/>
+        <FIELD NAME="timestarted" TYPE="int" LENGTH="10"/>
+        <FIELD NAME="timecompleted" TYPE="int" LENGTH="10"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" DEFAULT="queued" COMMENT="queued, running, retrying, completed, failed, cancelled, archived"/>
+        <FIELD NAME="error" TYPE="text" COMMENT="JSON error details"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="companyid" TYPE="foreign" FIELDS="companyid" REFTABLE="local_ci_company" REFFIELDS="id"/>
+        <KEY NAME="targetcompanyid" TYPE="foreign" FIELDS="targetcompanyid" REFTABLE="local_ci_company" REFFIELDS="id"/>
+        <KEY NAME="initiatedbyuserid" TYPE="foreign" FIELDS="initiatedbyuserid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="reusedfromrunid" TYPE="foreign" FIELDS="reusedfromrunid" REFTABLE="local_ci_run" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
+        <INDEX NAME="company_status_idx" UNIQUE="false" FIELDS="companyid, status"/>
+        <INDEX NAME="timestarted_idx" UNIQUE="false" FIELDS="timestarted"/>
+        <INDEX NAME="timecompleted_idx" UNIQUE="false" FIELDS="timecompleted"/>
+        <INDEX NAME="userid_idx" UNIQUE="false" FIELDS="userid"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- NB Result table -->
+    <TABLE NAME="local_ci_nb_result" COMMENT="Individual NB results">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="runid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="nbcode" TYPE="char" LENGTH="20" NOTNULL="true" COMMENT="NB codes with extended format support"/>
+        <FIELD NAME="jsonpayload" TYPE="text" LENGTH="big" COMMENT="JSON result payload"/>
+        <FIELD NAME="citations" TYPE="text" LENGTH="big" COMMENT="JSON array of citations"/>
+        <FIELD NAME="durationms" TYPE="int" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="tokensused" TYPE="int" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" DEFAULT="pending" COMMENT="pending, running, completed, failed"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="runid" TYPE="foreign" FIELDS="runid" REFTABLE="local_ci_run" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="nbcode_idx" UNIQUE="false" FIELDS="nbcode"/>
+        <INDEX NAME="runid_idx" UNIQUE="false" FIELDS="runid"/>
+        <INDEX NAME="runid_nbcode_idx" UNIQUE="true" FIELDS="runid, nbcode"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Telemetry table -->
+    <TABLE NAME="local_ci_telemetry" COMMENT="Run telemetry and metrics">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="runid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="metrickey" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="metricvaluenum" TYPE="number" LENGTH="20" DECIMALS="4"/>
+        <FIELD NAME="payload" TYPE="text" COMMENT="JSON additional data"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="runid" TYPE="foreign" FIELDS="runid" REFTABLE="local_ci_run" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="metrickey_idx" UNIQUE="false" FIELDS="metrickey"/>
+        <INDEX NAME="runid_metric_idx" UNIQUE="false" FIELDS="runid, metrickey"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Snapshot table -->
+    <TABLE NAME="local_ci_snapshot" COMMENT="Point-in-time intelligence snapshots">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="runid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="snapshotjson" TYPE="text" LENGTH="big" NOTNULL="true" COMMENT="Complete NB results snapshot"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="companyid" TYPE="foreign" FIELDS="companyid" REFTABLE="local_ci_company" REFFIELDS="id"/>
+        <KEY NAME="runid" TYPE="foreign" FIELDS="runid" REFTABLE="local_ci_run" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="company_time_idx" UNIQUE="false" FIELDS="companyid, timecreated"/>
+        <INDEX NAME="runid_idx" UNIQUE="false" FIELDS="runid"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Diff table -->
+    <TABLE NAME="local_ci_diff" COMMENT="Differences between snapshots">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="fromsnapshotid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="tosnapshotid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="diffjson" TYPE="text" LENGTH="big" NOTNULL="true" COMMENT="JSON diff between snapshots"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fromsnapshotid" TYPE="foreign" FIELDS="fromsnapshotid" REFTABLE="local_ci_snapshot" REFFIELDS="id"/>
+        <KEY NAME="tosnapshotid" TYPE="foreign" FIELDS="tosnapshotid" REFTABLE="local_ci_snapshot" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="from_to_idx" UNIQUE="true" FIELDS="fromsnapshotid, tosnapshotid"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Comparison table -->
+    <TABLE NAME="local_ci_comparison" COMMENT="Customer vs Target company comparisons">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="customercompanyid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="targetcompanyid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="basecustomersnapshotid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="targetsnapshotid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="comparisonjson" TYPE="text" LENGTH="big" NOTNULL="true" COMMENT="Full comparison analysis"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="customercompanyid" TYPE="foreign" FIELDS="customercompanyid" REFTABLE="local_ci_company" REFFIELDS="id"/>
+        <KEY NAME="targetcompanyid" TYPE="foreign" FIELDS="targetcompanyid" REFTABLE="local_ci_company" REFFIELDS="id"/>
+        <KEY NAME="basecustomersnapshotid" TYPE="foreign" FIELDS="basecustomersnapshotid" REFTABLE="local_ci_snapshot" REFFIELDS="id"/>
+        <KEY NAME="targetsnapshotid" TYPE="foreign" FIELDS="targetsnapshotid" REFTABLE="local_ci_snapshot" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="companies_idx" UNIQUE="false" FIELDS="customercompanyid, targetcompanyid"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Synthesis table -->
+    <TABLE NAME="local_ci_synthesis" COMMENT="Intelligence Playbook synthesis results">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="runid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="htmlcontent" TYPE="text" LENGTH="big" COMMENT="Final rendered Playbook HTML"/>
+        <FIELD NAME="jsoncontent" TYPE="text" LENGTH="big" COMMENT="Machine-readable JSON structure"/>
+        <FIELD NAME="voice_report" TYPE="text" LENGTH="big" COMMENT="Voice &amp; style validation results"/>
+        <FIELD NAME="selfcheck_report" TYPE="text" LENGTH="big" COMMENT="Self-check validation results"/>
+        <FIELD NAME="createdat" TYPE="int" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="updatedat" TYPE="int" LENGTH="10" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="runid" TYPE="foreign" FIELDS="runid" REFTABLE="local_ci_run" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="runid_idx" UNIQUE="true" FIELDS="runid"/>
+        <INDEX NAME="createdat_idx" UNIQUE="false" FIELDS="createdat"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Citation table (NEW for Slice 4) -->
+    <TABLE NAME="local_ci_citation" COMMENT="Enhanced citation tracking with confidence and diversity metrics">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="runid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="sourceid" TYPE="int" LENGTH="10" COMMENT="Optional link to source table"/>
+        <FIELD NAME="section" TYPE="char" LENGTH="50" NOTNULL="true" COMMENT="Report section identifier"/>
+        <FIELD NAME="marker" TYPE="char" LENGTH="10" NOTNULL="true" COMMENT="Section-prefixed marker e.g. EI1, FT2"/>
+        <FIELD NAME="position" TYPE="int" LENGTH="5" NOTNULL="true" COMMENT="Position within section"/>
+        <FIELD NAME="url" TYPE="text"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255"/>
+        <FIELD NAME="domain" TYPE="char" LENGTH="255"/>
+        <FIELD NAME="publishedat" TYPE="int" LENGTH="10"/>
+        <FIELD NAME="confidence" TYPE="number" LENGTH="5" DECIMALS="2" COMMENT="Confidence score 0.00-1.00"/>
+        <FIELD NAME="relevance" TYPE="number" LENGTH="5" DECIMALS="2" COMMENT="Relevance score 0.00-1.00"/>
+        <FIELD NAME="source_type" TYPE="char" LENGTH="20" COMMENT="regulatory|news|analyst|company|industry"/>
+        <FIELD NAME="snippet" TYPE="text" COMMENT="Excerpt from source"/>
+        <FIELD NAME="provenance" TYPE="text" COMMENT="JSON provenance data"/>
+        <FIELD NAME="diversity_tags" TYPE="text" COMMENT="JSON array of diversity tags"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="runid" TYPE="foreign" FIELDS="runid" REFTABLE="local_ci_run" REFFIELDS="id"/>
+        <KEY NAME="sourceid" TYPE="foreign" FIELDS="sourceid" REFTABLE="local_ci_source" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="runid_section_idx" UNIQUE="false" FIELDS="runid, section"/>
+        <INDEX NAME="marker_idx" UNIQUE="false" FIELDS="marker"/>
+        <INDEX NAME="confidence_idx" UNIQUE="false" FIELDS="confidence"/>
+        <INDEX NAME="source_type_idx" UNIQUE="false" FIELDS="source_type"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Citation Metrics table (NEW for Slice 4) -->
+    <TABLE NAME="local_ci_citation_metrics" COMMENT="Aggregated citation metrics per run">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="runid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="total_citations" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="unique_domains" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="confidence_avg" TYPE="number" LENGTH="5" DECIMALS="2" COMMENT="Average confidence"/>
+        <FIELD NAME="confidence_min" TYPE="number" LENGTH="5" DECIMALS="2" COMMENT="Minimum confidence"/>
+        <FIELD NAME="confidence_max" TYPE="number" LENGTH="5" DECIMALS="2" COMMENT="Maximum confidence"/>
+        <FIELD NAME="diversity_score" TYPE="number" LENGTH="5" DECIMALS="2" COMMENT="Overall diversity 0.00-1.00"/>
+        <FIELD NAME="source_distribution" TYPE="text" COMMENT="JSON source type distribution"/>
+        <FIELD NAME="recency_mix" TYPE="text" COMMENT="JSON publication date distribution"/>
+        <FIELD NAME="section_coverage" TYPE="text" COMMENT="JSON citations per section"/>
+        <FIELD NAME="low_confidence_count" TYPE="int" LENGTH="5" DEFAULT="0"/>
+        <FIELD NAME="trace_gaps" TYPE="int" LENGTH="5" DEFAULT="0" COMMENT="Sentences without citations"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="runid" TYPE="foreign-unique" FIELDS="runid" REFTABLE="local_ci_run" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="confidence_avg_idx" UNIQUE="false" FIELDS="confidence_avg"/>
+        <INDEX NAME="diversity_score_idx" UNIQUE="false" FIELDS="diversity_score"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Artifact table (NEW for Transparent Pipeline View) -->
+    <TABLE NAME="local_ci_artifact" COMMENT="Pipeline artifacts for transparent tracing and debugging">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="runid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="phase" TYPE="char" LENGTH="50" NOTNULL="true" COMMENT="discovery|nb_orchestration|assembler|synthesis|qa"/>
+        <FIELD NAME="artifacttype" TYPE="char" LENGTH="100" NOTNULL="true" COMMENT="Type identifier for artifact"/>
+        <FIELD NAME="jsondata" TYPE="text" LENGTH="big" NOTNULL="true" COMMENT="JSON artifact data"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="runid" TYPE="foreign" FIELDS="runid" REFTABLE="local_ci_run" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="runid_phase_idx" UNIQUE="false" FIELDS="runid, phase"/>
+        <INDEX NAME="phase_idx" UNIQUE="false" FIELDS="phase"/>
+        <INDEX NAME="timecreated_idx" UNIQUE="false" FIELDS="timecreated"/>
+        <INDEX NAME="runid_phase_type_idx" UNIQUE="false" FIELDS="runid, phase, artifacttype"/>
+      </INDEXES>
+    </TABLE>
+
+  </TABLES>
+</XMLDB>

@@ -1,0 +1,337 @@
+{
+  "type": "object",
+  "required": ["strategic_overview", "strategic_priorities", "execution_assessment", "strategic_alignment", "citations"],
+  "properties": {
+    "strategic_overview": {
+      "type": "object",
+      "required": ["strategic_vision", "mission_alignment", "strategic_framework"],
+      "properties": {
+        "strategic_vision": {
+          "type": "object",
+          "required": ["vision_statement", "clarity", "stakeholder_understanding"],
+          "properties": {
+            "vision_statement": {"type": "string"},
+            "clarity": {
+              "type": "string",
+              "enum": ["very_clear", "clear", "somewhat_clear", "unclear"]
+            },
+            "stakeholder_understanding": {
+              "type": "string",
+              "enum": ["fully_understood", "mostly_understood", "partially_understood", "not_understood"]
+            },
+            "time_horizon": {"type": "string"},
+            "strategic_themes": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "mission_alignment": {
+          "type": "object",
+          "required": ["alignment_strength", "consistency"],
+          "properties": {
+            "alignment_strength": {
+              "type": "string",
+              "enum": ["fully_aligned", "mostly_aligned", "partially_aligned", "misaligned"]
+            },
+            "consistency": {
+              "type": "string",
+              "enum": ["consistent", "mostly_consistent", "inconsistent"]
+            },
+            "evolution_over_time": {"type": "string"}
+          }
+        },
+        "strategic_framework": {
+          "type": "object",
+          "required": ["framework_type", "key_components", "decision_making"],
+          "properties": {
+            "framework_type": {"type": "string"},
+            "key_components": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "decision_making": {
+              "type": "string",
+              "enum": ["centralized", "decentralized", "hybrid", "unclear"]
+            },
+            "planning_process": {"type": "string"}
+          }
+        }
+      }
+    },
+    "strategic_priorities": {
+      "type": "object",
+      "required": ["current_priorities", "resource_allocation", "priority_evolution"],
+      "properties": {
+        "current_priorities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["priority", "importance", "progress", "timeline"],
+            "properties": {
+              "priority": {"type": "string"},
+              "importance": {
+                "type": "string",
+                "enum": ["critical", "high", "medium", "low"]
+              },
+              "progress": {
+                "type": "string",
+                "enum": ["ahead_of_schedule", "on_track", "behind_schedule", "at_risk"]
+              },
+              "timeline": {"type": "string"},
+              "success_metrics": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "key_initiatives": {
+                "type": "array",
+                "items": {"type": "string"}
+              }
+            }
+          }
+        },
+        "resource_allocation": {
+          "type": "object",
+          "required": ["investment_distribution", "budget_alignment", "capability_gaps"],
+          "properties": {
+            "investment_distribution": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["area", "percentage", "rationale"],
+                "properties": {
+                  "area": {"type": "string"},
+                  "percentage": {"type": "number"},
+                  "rationale": {"type": "string"}
+                }
+              }
+            },
+            "budget_alignment": {
+              "type": "string",
+              "enum": ["fully_aligned", "mostly_aligned", "partially_aligned", "misaligned"]
+            },
+            "capability_gaps": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "priority_evolution": {
+          "type": "object",
+          "required": ["strategic_shifts", "continuity", "adaptation"],
+          "properties": {
+            "strategic_shifts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["shift", "rationale", "timing"],
+                "properties": {
+                  "shift": {"type": "string"},
+                  "rationale": {"type": "string"},
+                  "timing": {"type": "string"},
+                  "impact": {"type": "string"}
+                }
+              }
+            },
+            "continuity": {
+              "type": "string",
+              "enum": ["high", "moderate", "low"]
+            },
+            "adaptation": {
+              "type": "string",
+              "enum": ["highly_adaptive", "adaptive", "somewhat_rigid", "rigid"]
+            }
+          }
+        }
+      }
+    },
+    "execution_assessment": {
+      "type": "object",
+      "required": ["execution_capability", "performance_tracking", "implementation_challenges"],
+      "properties": {
+        "execution_capability": {
+          "type": "object",
+          "required": ["overall_rating", "strengths", "weaknesses"],
+          "properties": {
+            "overall_rating": {
+              "type": "string",
+              "enum": ["excellent", "good", "adequate", "poor"]
+            },
+            "strengths": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "weaknesses": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "historical_performance": {"type": "string"}
+          }
+        },
+        "performance_tracking": {
+          "type": "object",
+          "required": ["kpi_framework", "reporting_frequency", "accountability"],
+          "properties": {
+            "kpi_framework": {"type": "string"},
+            "reporting_frequency": {
+              "type": "string",
+              "enum": ["real_time", "weekly", "monthly", "quarterly", "annual"]
+            },
+            "accountability": {
+              "type": "string",
+              "enum": ["clear", "adequate", "unclear"]
+            },
+            "course_correction": {"type": "string"}
+          }
+        },
+        "implementation_challenges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["challenge", "impact", "mitigation"],
+            "properties": {
+              "challenge": {"type": "string"},
+              "impact": {
+                "type": "string",
+                "enum": ["critical", "high", "medium", "low"]
+              },
+              "mitigation": {"type": "string"},
+              "status": {
+                "type": "string",
+                "enum": ["resolved", "in_progress", "planned", "unaddressed"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "strategic_alignment": {
+      "type": "object",
+      "required": ["cross_functional_alignment", "organizational_coherence", "external_alignment"],
+      "properties": {
+        "cross_functional_alignment": {
+          "type": "object",
+          "required": ["departments", "coordination", "conflicts"],
+          "properties": {
+            "departments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["department", "alignment_level"],
+                "properties": {
+                  "department": {"type": "string"},
+                  "alignment_level": {
+                    "type": "string",
+                    "enum": ["fully_aligned", "mostly_aligned", "partially_aligned", "misaligned"]
+                  },
+                  "key_contributions": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                  }
+                }
+              }
+            },
+            "coordination": {
+              "type": "string",
+              "enum": ["excellent", "good", "adequate", "poor"]
+            },
+            "conflicts": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "organizational_coherence": {
+          "type": "object",
+          "required": ["strategic_coherence", "cultural_fit", "change_readiness"],
+          "properties": {
+            "strategic_coherence": {
+              "type": "string",
+              "enum": ["highly_coherent", "coherent", "somewhat_coherent", "incoherent"]
+            },
+            "cultural_fit": {
+              "type": "string",
+              "enum": ["strong_fit", "good_fit", "moderate_fit", "poor_fit"]
+            },
+            "change_readiness": {
+              "type": "string",
+              "enum": ["highly_ready", "ready", "somewhat_ready", "resistant"]
+            }
+          }
+        },
+        "external_alignment": {
+          "type": "object",
+          "required": ["market_alignment", "stakeholder_alignment", "competitive_positioning"],
+          "properties": {
+            "market_alignment": {
+              "type": "string",
+              "enum": ["well_aligned", "aligned", "partially_aligned", "misaligned"]
+            },
+            "stakeholder_alignment": {
+              "type": "string",
+              "enum": ["strong", "good", "moderate", "weak"]
+            },
+            "competitive_positioning": {"type": "string"}
+          }
+        }
+      }
+    },
+    "strategic_risks": {
+      "type": "object",
+      "properties": {
+        "execution_risks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["risk", "likelihood", "impact"],
+            "properties": {
+              "risk": {"type": "string"},
+              "likelihood": {
+                "type": "string",
+                "enum": ["very_high", "high", "medium", "low", "very_low"]
+              },
+              "impact": {
+                "type": "string",
+                "enum": ["catastrophic", "major", "moderate", "minor", "negligible"]
+              },
+              "mitigation": {"type": "string"}
+            }
+          }
+        },
+        "strategic_assumptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["assumption", "validity", "sensitivity"],
+            "properties": {
+              "assumption": {"type": "string"},
+              "validity": {
+                "type": "string",
+                "enum": ["high", "medium", "low", "questionable"]
+              },
+              "sensitivity": {
+                "type": "string",
+                "enum": ["high", "medium", "low"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["source_id"],
+        "properties": {
+          "source_id": {"type": "integer"},
+          "quote": {"type": "string"},
+          "page": {"type": "string"},
+          "url": {"type": "string"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,125 @@
+<h3>{{#str}} managesources, local_customerintel {{/str}}</h3>
+
+{{#message}}
+<div class="alert alert-{{messagetype}} alert-dismissible fade show" role="alert">
+  {{message}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{{/message}}
+
+<div class="mb-3">
+  <a class="btn btn-secondary" href="{{dashboardurl}}">{{#str}} backtodashboard, local_customerintel {{/str}}</a>
+</div>
+
+<form method="post" action="">
+  <input type="hidden" name="sesskey" value="{{sesskey}}">
+  <input type="hidden" name="action" value="add">
+
+  <div class="card mb-4">
+    <div class="card-header">{{#str}} addsourcedesc, local_customerintel {{/str}}</div>
+    <div class="card-body">
+      <div class="form-group mb-3">
+        <label for="companyid">{{#str}} company, local_customerintel {{/str}} <span class="text-danger">*</span></label>
+        <select name="companyid" id="companyid" class="form-control" required>
+          <option value="">{{#str}} selectcompany, local_customerintel {{/str}}</option>
+          {{#companies}}
+            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+          {{/companies}}
+        </select>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="sourcetype">{{#str}} sourcetype, local_customerintel {{/str}}</label>
+        <select name="sourcetype" id="sourcetype" class="form-control">
+          {{#sourcetypes}}
+            <option value="{{value}}">{{label}}</option>
+          {{/sourcetypes}}
+        </select>
+      </div>
+
+      <div class="form-group mb-3" id="url-group">
+        <label for="sourceurl">{{#str}} sourceurl, local_customerintel {{/str}}</label>
+        <input type="text" name="sourceurl" id="sourceurl" class="form-control" placeholder="https://example.com">
+        <small class="form-text text-muted">{{#str}} sourceurlhelp, local_customerintel {{/str}}</small>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="description">{{#str}} description, local_customerintel {{/str}}</label>
+        <textarea name="description" id="description" rows="3" class="form-control" placeholder="{{#str}} descriptionplaceholder, local_customerintel {{/str}}"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">{{#str}} addsource, local_customerintel {{/str}}</button>
+    </div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="card-header">
+    <h4 class="mb-0">{{#str}} existingsources, local_customerintel {{/str}}</h4>
+  </div>
+  <div class="card-body">
+    {{#hassources}}
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>{{#str}} company, local_customerintel {{/str}}</th>
+            <th>{{#str}} title, local_customerintel {{/str}}</th>
+            <th>{{#str}} sourcetype, local_customerintel {{/str}}</th>
+            <th>URL</th>
+            <th>{{#str}} approved, local_customerintel {{/str}}</th>
+            <th>{{#str}} created, local_customerintel {{/str}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#sources}}
+          <tr>
+            <td>{{id}}</td>
+            <td>{{companyname}}</td>
+            <td>{{title}}</td>
+            <td>{{type}}</td>
+            <td>
+              {{#url}}
+                <a href="{{url}}" target="_blank" class="text-truncate" style="max-width: 200px; display: inline-block;">{{url}}</a>
+              {{/url}}
+              {{^url}}-{{/url}}
+            </td>
+            <td>{{approved_h}}</td>
+            <td>{{timecreated_h}}</td>
+          </tr>
+          {{/sources}}
+        </tbody>
+      </table>
+    </div>
+    {{/hassources}}
+    {{^hassources}}
+    <div class="alert alert-info">
+      <em>{{#str}} nosources, local_customerintel {{/str}}</em>
+    </div>
+    {{/hassources}}
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var sourceType = document.getElementById('sourcetype');
+    var urlGroup = document.getElementById('url-group');
+    var urlInput = document.getElementById('sourceurl');
+    
+    function toggleUrlField() {
+        if (sourceType.value === 'url') {
+            urlGroup.style.display = 'block';
+            urlInput.required = true;
+        } else {
+            urlGroup.style.display = 'none';
+            urlInput.required = false;
+            urlInput.value = '';
+        }
+    }
+    
+    sourceType.addEventListener('change', toggleUrlField);
+    toggleUrlField();
+});</script>

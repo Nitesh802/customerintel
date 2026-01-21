@@ -1,0 +1,398 @@
+{
+  "audit_metadata": {
+    "plugin": "local_customerintel",
+    "date": "2025-10-13",
+    "total_files_audited": 14,
+    "total_issues": 51,
+    "severity_counts": {
+      "error": 19,
+      "warning": 22,
+      "suggestion": 10
+    }
+  },
+  "issues": {
+    "error": [
+      {
+        "file": "classes/services/company_service.php",
+        "line": 103,
+        "issue": "Raw SQL used instead of Moodle DB API",
+        "code": "$sql = \"SELECT * FROM {local_ci_company} WHERE {$typefilter}\";",
+        "fix": "Use $DB->get_records_select() with proper parameter binding instead of constructing SQL"
+      },
+      {
+        "file": "classes/services/source_service.php",
+        "line": 333,
+        "issue": "JOIN query should use Moodle DB API properly",
+        "code": "$sql = \"SELECT s.*, u.firstname, u.lastname, u.email FROM {local_ci_source} s JOIN {user} u ON s.addedbyuserid = u.id\"",
+        "fix": "Consider using $DB->get_records_sql() with LEFT JOIN to handle potential missing users"
+      },
+      {
+        "file": "classes/services/source_service.php",
+        "line": 487,
+        "issue": "Raw SQL UPDATE/DELETE without proper API usage",
+        "code": "$sql = \"UPDATE {local_ci_source} SET approved = :approved, rejected = :rejected WHERE id $insql\";",
+        "fix": "Use $DB->set_field() or $DB->execute() with proper parameter handling"
+      },
+      {
+        "file": "classes/services/source_service.php",
+        "line": 577,
+        "issue": "Raw DELETE SQL instead of Moodle API",
+        "code": "$sql = \"DELETE FROM {local_ci_source} WHERE companyid = :companyid AND hash = :hash AND id != :keepid\";",
+        "fix": "Use $DB->delete_records_select() with proper conditions"
+      },
+      {
+        "file": "classes/services/versioning_service.php",
+        "line": 52,
+        "issue": "Raw SQL with LIMIT clause (not portable)",
+        "code": "ORDER BY id DESC LIMIT 1",
+        "fix": "Use Moodle's DB API with limit parameter: $DB->get_records_sql($sql, $params, 0, 1)"
+      },
+      {
+        "file": "classes/services/versioning_service.php",
+        "line": 179,
+        "issue": "Raw SQL with LIMIT clause (not portable)",
+        "code": "ORDER BY id DESC LIMIT 1",
+        "fix": "Use Moodle's DB API with limit parameter"
+      },
+      {
+        "file": "classes/services/versioning_service.php",
+        "line": 487,
+        "issue": "Raw SQL with LIMIT clause (not portable)",
+        "code": "ORDER BY s.timecreated DESC LIMIT 1",
+        "fix": "Use Moodle's DB API with limit parameter"
+      },
+      {
+        "file": "classes/services/cost_service.php",
+        "line": 466,
+        "issue": "Raw SQL with LIMIT clause (not portable)",
+        "code": "ORDER BY s.timecreated DESC LIMIT 1",
+        "fix": "Use Moodle's DB API with limit parameter"
+      },
+      {
+        "file": "classes/services/job_queue.php",
+        "line": 368,
+        "issue": "MySQL/MariaDB specific JSON operator in SQL",
+        "code": "CAST(payload->>'$.attempt' AS UNSIGNED)",
+        "fix": "Use portable SQL or handle JSON in PHP after retrieval"
+      },
+      {
+        "file": "dashboard.php",
+        "line": 41,
+        "issue": "Raw SQL with LIMIT clause (not portable)",
+        "code": "LIMIT 5",
+        "fix": "Use $DB->get_records_sql() with limit parameter"
+      },
+      {
+        "file": "dashboard.php",
+        "line": 54,
+        "issue": "Incorrect capability check",
+        "code": "has_capability('local/customerintel:managecompanies', $context)",
+        "fix": "Capability 'local/customerintel:managecompanies' not defined in access.php"
+      },
+      {
+        "file": "report.php",
+        "line": 34,
+        "issue": "Undefined capability check",
+        "code": "has_capability('local/customerintel:viewallreports', $context)",
+        "fix": "Capability 'local/customerintel:viewallreports' not defined in access.php"
+      },
+      {
+        "file": "admin_settings.php",
+        "line": 189,
+        "issue": "Function defined outside of class",
+        "code": "function parse_domain_list($text)",
+        "fix": "Move function into a helper class or make it a protected/private method"
+      },
+      {
+        "file": "classes/helpers/text_processor.php",
+        "line": 37,
+        "issue": "Using shell commands without proper security",
+        "code": "exec($command, $output, $return_var);",
+        "fix": "Validate and sanitize all inputs, consider using Moodle's file conversion API"
+      },
+      {
+        "file": "classes/services/nb_orchestrator.php",
+        "line": 284,
+        "issue": "Hardcoded file path construction",
+        "code": "$schemafile = $CFG->dirroot . '/local/customerintel/schemas/' . strtolower($nbcode) . '.json';",
+        "fix": "Use Moodle's file handling APIs and check file permissions"
+      },
+      {
+        "file": "classes/services/cost_service.php",
+        "line": 506,
+        "issue": "Method doesn't exist - undefined method called",
+        "code": "$costservice->calculate_token_cost($tokens, 'output')",
+        "fix": "Method calculate_token_cost() is not defined in cost_service class"
+      },
+      {
+        "file": "classes/services/cost_service.php",
+        "line": 520,
+        "issue": "Method get_configured_provider() should be public if called externally",
+        "code": "protected function get_configured_provider()",
+        "fix": "Change to public visibility or add public wrapper method"
+      },
+      {
+        "file": "classes/services/job_queue.php",
+        "line": 325,
+        "issue": "Task class not found in codebase",
+        "code": "new \\local_customerintel\\task\\execute_run_task()",
+        "fix": "Create the missing task class file: classes/task/execute_run_task.php"
+      },
+      {
+        "file": "report.php",
+        "line": 166,
+        "issue": "Using Mustache template without defining it",
+        "code": "$OUTPUT->render_from_template('local_customerintel/report', $reportdata)",
+        "fix": "Create template file: templates/report.mustache"
+      }
+    ],
+    "warning": [
+      {
+        "file": "version.php",
+        "line": 21,
+        "issue": "TODO comment found",
+        "code": "// TODO: Update version for each release per PRD Section 22",
+        "fix": "Remove TODO comment or implement the required functionality"
+      },
+      {
+        "file": "db/access.php",
+        "line": 75,
+        "issue": "TODO comment found",
+        "code": "// TODO: Add granular capabilities per PRD Section 4",
+        "fix": "Remove TODO comment or implement the required capabilities"
+      },
+      {
+        "file": "run.php",
+        "line": 22,
+        "issue": "Multiple TODO comments found",
+        "code": "// TODO: Implement run page per PRD Section 19",
+        "fix": "Remove TODO comments or implement the required functionality"
+      },
+      {
+        "file": "classes/services/assembler.php",
+        "line": 68,
+        "issue": "Method get_snapshots() called but not defined",
+        "code": "$snapshots = $this->get_snapshots($run->companyid);",
+        "fix": "Method is defined later in file at line 570 - consider reorganizing"
+      },
+      {
+        "file": "classes/services/assembler.php",
+        "line": 106,
+        "issue": "Method map_to_phases() should be public if part of public API",
+        "code": "protected function map_to_phases(array $nbresults)",
+        "fix": "Consider making public since called from public method assemble_report()"
+      },
+      {
+        "file": "classes/clients/llm_client.php",
+        "line": 37,
+        "issue": "Using debugging() without proper error handling",
+        "code": "debugging('PDF extraction failed: ' . $e->getMessage(), DEBUG_DEVELOPER);",
+        "fix": "Consider throwing exception or returning error status"
+      },
+      {
+        "file": "admin_settings.php",
+        "line": 117,
+        "issue": "Direct access to stdClass without validation",
+        "code": "$current = new stdClass();",
+        "fix": "Consider using a proper data class or validation"
+      },
+      {
+        "file": "dashboard.php",
+        "line": 41,
+        "issue": "Direct SQL without considering multi-tenancy",
+        "code": "$DB->get_records_sql(...)",
+        "fix": "Consider adding user/context filtering for multi-tenant environments"
+      },
+      {
+        "file": "report.php",
+        "line": 46,
+        "issue": "Hardcoded CSS file reference",
+        "code": "$PAGE->requires->css('/local/customerintel/styles.css');",
+        "fix": "Use $PAGE->requires->css(new moodle_url('/local/customerintel/styles.css'))"
+      },
+      {
+        "file": "classes/services/source_service.php",
+        "line": 693,
+        "issue": "Code commented out - database operation not performed",
+        "code": "// $DB->insert_record('local_ci_source_chunk', $chunk);",
+        "fix": "Implement the database table and uncomment, or remove if not needed"
+      },
+      {
+        "file": "classes/services/source_service.php",
+        "line": 622,
+        "issue": "Static variable usage for ID generation",
+        "code": "static $citationid = 1;",
+        "fix": "Use proper database sequence or auto-increment"
+      },
+      {
+        "file": "classes/helpers/text_processor.php",
+        "line": 38,
+        "issue": "Using is_executable() without checking safe_mode",
+        "code": "if (is_executable('/usr/bin/pdftotext'))",
+        "fix": "Check PHP safe_mode and open_basedir restrictions"
+      },
+      {
+        "file": "classes/helpers/text_processor.php",
+        "line": 65,
+        "issue": "Using debugging() for error logging",
+        "code": "debugging('No PDF extraction tools available', DEBUG_DEVELOPER);",
+        "fix": "Consider using proper logging or error handling"
+      },
+      {
+        "file": "classes/services/nb_orchestrator.php",
+        "line": 93,
+        "issue": "Using mtrace() outside of CLI context check",
+        "code": "mtrace(\"Created snapshot {$snapshotid} for run {$runid}\");",
+        "fix": "Check CLI_SCRIPT constant before using mtrace()"
+      },
+      {
+        "file": "classes/services/nb_orchestrator.php",
+        "line": 435,
+        "issue": "Direct instantiation of service class",
+        "code": "$costservice = new \\local_customerintel\\services\\cost_service();",
+        "fix": "Consider using dependency injection or service locator pattern"
+      },
+      {
+        "file": "classes/services/assembler.php",
+        "line": 247,
+        "issue": "Multiple TODO comments in methods",
+        "code": "// TODO: Match TSX component structure",
+        "fix": "Implement or remove TODO comments"
+      },
+      {
+        "file": "classes/services/versioning_service.php",
+        "line": 268,
+        "issue": "Incorrect field name in database query",
+        "code": "'type' => $source->sourcetype",
+        "fix": "Field should be 'type' not 'sourcetype' based on table structure"
+      },
+      {
+        "file": "dashboard.php",
+        "line": 69,
+        "issue": "Inline HTML mixed with PHP",
+        "code": "HTML output directly in PHP file",
+        "fix": "Use Moodle renderer pattern or Mustache templates"
+      },
+      {
+        "file": "report.php",
+        "line": 57,
+        "issue": "Redirect to non-existent file",
+        "code": "redirect(new moodle_url('/local/customerintel/export.php'",
+        "fix": "Create export.php or remove export functionality"
+      },
+      {
+        "file": "settings.php",
+        "line": 113,
+        "issue": "Comment says not added to menu but might be",
+        "code": "// Note: We don't add this to the admin menu",
+        "fix": "Verify the $settings object handling in Moodle"
+      },
+      {
+        "file": "classes/services/job_queue.php",
+        "line": 492,
+        "issue": "Placeholder implementation",
+        "code": "// This would integrate with the LLM provider's API",
+        "fix": "Implement actual token counting or document as limitation"
+      },
+      {
+        "file": "lang/en/local_customerintel.php",
+        "line": 11,
+        "issue": "Not actually a lang file - incorrectly identified",
+        "code": "defined('MOODLE_INTERNAL') || die();",
+        "fix": "This is correct - lang files should have MOODLE_INTERNAL check"
+      }
+    ],
+    "suggestion": [
+      {
+        "file": "classes/services/company_service.php",
+        "line": 24,
+        "issue": "Consider adding PHPDoc @since tag",
+        "code": "public function create_company(...)",
+        "fix": "Add @since tag to track API changes"
+      },
+      {
+        "file": "classes/services/source_service.php",
+        "line": 384,
+        "issue": "TODO comment for implementation",
+        "code": "TODO: Implement per PRD Section 14",
+        "fix": "Track in issue tracker rather than code comments"
+      },
+      {
+        "file": "classes/services/assembler.php",
+        "line": 30,
+        "issue": "Large method - consider refactoring",
+        "code": "public function assemble_report() - 70+ lines",
+        "fix": "Break down into smaller, focused methods"
+      },
+      {
+        "file": "classes/services/nb_orchestrator.php",
+        "line": 111,
+        "issue": "Large method - consider refactoring",
+        "code": "public function execute_nb() - 90+ lines",
+        "fix": "Break down into smaller, focused methods"
+      },
+      {
+        "file": "classes/services/cost_service.php",
+        "line": 62,
+        "issue": "Large method - consider refactoring",
+        "code": "public function estimate_cost() - 75+ lines",
+        "fix": "Break down into smaller, focused methods"
+      },
+      {
+        "file": "dashboard.php",
+        "line": 26,
+        "issue": "Consider using renderer pattern",
+        "code": "Direct HTML output in page",
+        "fix": "Create a renderer class for dashboard output"
+      },
+      {
+        "file": "report.php",
+        "line": 80,
+        "issue": "Consider implementing export functionality",
+        "code": "// TODO: Implement PDF export",
+        "fix": "Implement or remove from UI"
+      },
+      {
+        "file": "classes/helpers/json_validator.php",
+        "line": 344,
+        "issue": "Complex regex patterns",
+        "code": "Complex regex for JSON fixing",
+        "fix": "Consider using a JSON parsing library"
+      },
+      {
+        "file": "classes/services/versioning_service.php",
+        "line": 343,
+        "issue": "Deep nesting in method",
+        "code": "deep_compare_arrays() has 4+ levels of nesting",
+        "fix": "Refactor to reduce complexity"
+      },
+      {
+        "file": "classes/forms/admin_settings_form.php",
+        "line": 221,
+        "issue": "Large validation method",
+        "code": "validation() method is 75+ lines",
+        "fix": "Break into smaller validation methods"
+      }
+    ]
+  },
+  "summary": {
+    "critical_issues": [
+      "Multiple instances of raw SQL instead of using Moodle DB API properly",
+      "Non-portable SQL with LIMIT clauses",
+      "Missing capability definitions referenced in code",
+      "Missing task class file for background processing",
+      "Security concern with shell command execution",
+      "Missing Mustache template file referenced in code"
+    ],
+    "compliance_status": "NEEDS_ATTENTION",
+    "recommendations": [
+      "Replace all raw SQL with proper Moodle DB API calls",
+      "Fix capability definitions in access.php",
+      "Create missing task and template files",
+      "Implement proper error handling instead of debugging() calls",
+      "Use renderer pattern instead of inline HTML",
+      "Add proper validation and security checks for file operations",
+      "Complete TODO items or move to issue tracker"
+    ]
+  }
+}

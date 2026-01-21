@@ -1,0 +1,136 @@
+{
+  "type": "object",
+  "required": ["strategic_goals", "initiatives", "investments", "partnerships", "citations"],
+  "properties": {
+    "strategic_goals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["goal", "priority", "timeline", "status"],
+        "properties": {
+          "goal": {"type": "string"},
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "timeline": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": ["on-track", "at-risk", "delayed", "completed"]
+          },
+          "kpis": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "initiatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "investment", "expected_impact"],
+        "properties": {
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "investment": {"type": "string"},
+          "expected_impact": {"type": "string"},
+          "timeline": {"type": "string"},
+          "risks": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "investments": {
+      "type": "object",
+      "required": ["capex", "r_and_d", "acquisitions"],
+      "properties": {
+        "capex": {
+          "type": "object",
+          "required": ["amount", "focus_areas"],
+          "properties": {
+            "amount": {"type": "string"},
+            "focus_areas": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "r_and_d": {
+          "type": "object",
+          "required": ["budget", "priorities"],
+          "properties": {
+            "budget": {"type": "string"},
+            "as_percent_of_revenue": {"type": "number"},
+            "priorities": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "acquisitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["target", "rationale", "status"],
+            "properties": {
+              "target": {"type": "string"},
+              "rationale": {"type": "string"},
+              "value": {"type": "string"},
+              "status": {
+                "type": "string",
+                "enum": ["completed", "pending", "exploring", "cancelled"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "partnerships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["partner", "type", "objective"],
+        "properties": {
+          "partner": {"type": "string"},
+          "type": {
+            "type": "string",
+            "enum": ["strategic", "technology", "distribution", "joint-venture", "other"]
+          },
+          "objective": {"type": "string"},
+          "status": {"type": "string"}
+        }
+      }
+    },
+    "transformation_programs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["program", "scope", "expected_benefits"],
+        "properties": {
+          "program": {"type": "string"},
+          "scope": {"type": "string"},
+          "expected_benefits": {"type": "string"},
+          "progress": {"type": "string"}
+        }
+      }
+    },
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["source_id"],
+        "properties": {
+          "source_id": {"type": "integer"},
+          "quote": {"type": "string"},
+          "page": {"type": "string"},
+          "url": {"type": "string"}
+        }
+      }
+    }
+  }
+}
