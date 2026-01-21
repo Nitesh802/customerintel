@@ -116,7 +116,8 @@ try {
 
     // Limit results: show all matching when searching, otherwise show recent 5
     $limit = empty($search) ? 5 : 0;
-    $recent_runs = $DB->get_records_sql($sql, $params, 0, $limit);
+    // Use array_values to preserve SQL order (get_records_sql returns array keyed by ID)
+    $recent_runs = array_values($DB->get_records_sql($sql, $params, 0, $limit));
 
     // Set default names for missing companies
     foreach ($recent_runs as $run) {
