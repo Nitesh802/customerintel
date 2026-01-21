@@ -14,29 +14,164 @@
     <div><strong>{{completed}}</strong><div>{{#str}} completed, local_customerintel {{/str}}</div></div>
     <div><strong>{{failed}}</strong><div>{{#str}} failed, local_customerintel {{/str}}</div></div>
   </div>
+
+  <!-- Search Form -->
+  <div class="mb-3">
+    <form method="get" action="{{dashboardurl}}" class="form-inline">
+      <div class="input-group" style="max-width: 400px;">
+        <input type="text" name="intel" class="form-control" placeholder="Search by ID, Customer or Target..." value="{{search}}">
+        <input type="hidden" name="sort" value="{{sort}}">
+        <input type="hidden" name="dir" value="{{dir}}">
+        <div class="input-group-append">
+          <button type="submit" class="btn btn-outline-secondary">
+            <i class="fa fa-search"></i> Search
+          </button>
+        </div>
+      </div>
+      {{#search}}
+      <a href="{{dashboardurl}}" class="btn btn-link ml-2">Clear search</a>
+      {{/search}}
+    </form>
+  </div>
+
   <div class="card mb-3">
     <div class="card-header">{{#str}} recentruns, local_customerintel {{/str}}</div>
     <div class="card-body">
-      {{#runs}}
-        <table class="table table-sm">
-          <thead><tr><th>ID</th><th>{{#str}} customer, local_customerintel {{/str}}</th><th>{{#str}} target, local_customerintel {{/str}}</th><th>{{#str}} status, local_customerintel {{/str}}</th><th>{{#str}} started, local_customerintel {{/str}}</th><th>{{#str}} completed, local_customerintel {{/str}}</th></tr></thead>
-          <tbody>
-            {{#runs}}
-            <tr>
-              <td>{{id}}</td>
-              <td>{{customername}}</td>
-              <td>{{targetname}}</td>
-              <td>{{status}}</td>
-              <td>{{timestarted_h}}</td>
-              <td>{{timecompleted_h}}</td>
-            </tr>
-            {{/runs}}
-          </tbody>
-        </table>
-      {{/runs}}
-      {{^runs}}
-        <em>{{#str}} noruns, local_customerintel {{/str}}</em>
-      {{/runs}}
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr>
+            <th class="sortable">
+              <a href="{{sort_id_url}}" class="text-dark text-decoration-none d-flex align-items-center">
+                ID
+                {{#sort_id_active}}
+                  {{#sort_id_asc}}<i class="fa fa-sort-asc ml-1"></i>{{/sort_id_asc}}
+                  {{#sort_id_desc}}<i class="fa fa-sort-desc ml-1"></i>{{/sort_id_desc}}
+                {{/sort_id_active}}
+                {{^sort_id_active}}<i class="fa fa-sort ml-1 text-muted"></i>{{/sort_id_active}}
+              </a>
+            </th>
+            <th class="sortable">
+              <a href="{{sort_customer_url}}" class="text-dark text-decoration-none d-flex align-items-center">
+                {{#str}} customer, local_customerintel {{/str}}
+                {{#sort_customer_active}}
+                  {{#sort_customer_asc}}<i class="fa fa-sort-asc ml-1"></i>{{/sort_customer_asc}}
+                  {{#sort_customer_desc}}<i class="fa fa-sort-desc ml-1"></i>{{/sort_customer_desc}}
+                {{/sort_customer_active}}
+                {{^sort_customer_active}}<i class="fa fa-sort ml-1 text-muted"></i>{{/sort_customer_active}}
+              </a>
+            </th>
+            <th class="sortable">
+              <a href="{{sort_target_url}}" class="text-dark text-decoration-none d-flex align-items-center">
+                {{#str}} target, local_customerintel {{/str}}
+                {{#sort_target_active}}
+                  {{#sort_target_asc}}<i class="fa fa-sort-asc ml-1"></i>{{/sort_target_asc}}
+                  {{#sort_target_desc}}<i class="fa fa-sort-desc ml-1"></i>{{/sort_target_desc}}
+                {{/sort_target_active}}
+                {{^sort_target_active}}<i class="fa fa-sort ml-1 text-muted"></i>{{/sort_target_active}}
+              </a>
+            </th>
+            <th class="sortable">
+              <a href="{{sort_status_url}}" class="text-dark text-decoration-none d-flex align-items-center">
+                {{#str}} status, local_customerintel {{/str}}
+                {{#sort_status_active}}
+                  {{#sort_status_asc}}<i class="fa fa-sort-asc ml-1"></i>{{/sort_status_asc}}
+                  {{#sort_status_desc}}<i class="fa fa-sort-desc ml-1"></i>{{/sort_status_desc}}
+                {{/sort_status_active}}
+                {{^sort_status_active}}<i class="fa fa-sort ml-1 text-muted"></i>{{/sort_status_active}}
+              </a>
+            </th>
+            <th class="sortable">
+              <a href="{{sort_started_url}}" class="text-dark text-decoration-none d-flex align-items-center">
+                {{#str}} started, local_customerintel {{/str}}
+                {{#sort_started_active}}
+                  {{#sort_started_asc}}<i class="fa fa-sort-asc ml-1"></i>{{/sort_started_asc}}
+                  {{#sort_started_desc}}<i class="fa fa-sort-desc ml-1"></i>{{/sort_started_desc}}
+                {{/sort_started_active}}
+                {{^sort_started_active}}<i class="fa fa-sort ml-1 text-muted"></i>{{/sort_started_active}}
+              </a>
+            </th>
+            <th class="sortable">
+              <a href="{{sort_completed_url}}" class="text-dark text-decoration-none d-flex align-items-center">
+                {{#str}} completed, local_customerintel {{/str}}
+                {{#sort_completed_active}}
+                  {{#sort_completed_asc}}<i class="fa fa-sort-asc ml-1"></i>{{/sort_completed_asc}}
+                  {{#sort_completed_desc}}<i class="fa fa-sort-desc ml-1"></i>{{/sort_completed_desc}}
+                {{/sort_completed_active}}
+                {{^sort_completed_active}}<i class="fa fa-sort ml-1 text-muted"></i>{{/sort_completed_active}}
+              </a>
+            </th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#runs}}
+          <tr>
+            <td>{{id}}</td>
+            <td>{{customername}}</td>
+            <td>{{targetname}}</td>
+            <td>{{status}}</td>
+            <td>{{timestarted_h}}</td>
+            <td>{{timecompleted_h}}</td>
+            <td>
+              {{#can_view_report}}
+                <a href="{{report_url}}" class="btn btn-sm btn-primary">
+                  View Report
+                  {{#is_processing}}
+                    <span class="badge badge-info" style="margin-left: 5px;">
+                      <span class="spinner-small"></span> In Progress
+                    </span>
+                  {{/is_processing}}
+                </a>
+              {{/can_view_report}}
+            </td>
+          </tr>
+          {{/runs}}
+          {{^runs}}
+          <tr>
+            <td colspan="7" class="text-center text-muted">
+              <em>{{#str}} noruns, local_customerintel {{/str}}</em>
+            </td>
+          </tr>
+          {{/runs}}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
+
+<style>
+/* M2 Task 0.2: Spinner for in-progress runs */
+.spinner-small {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #7FF6D3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Sortable column headers */
+.sortable a {
+    white-space: nowrap;
+}
+
+.sortable a:hover {
+    text-decoration: none !important;
+}
+
+.sortable .fa-sort {
+    opacity: 0.3;
+}
+
+.sortable:hover .fa-sort {
+    opacity: 0.7;
+}
+</style>
