@@ -151,6 +151,23 @@ $templatedata->search = $search;
 $templatedata->sort = $sort;
 $templatedata->dir = $dir;
 
+// Generate sort URLs for each column
+$opposite_dir = ($dir === 'asc') ? 'desc' : 'asc';
+$sort_columns = ['id', 'customer', 'target', 'status', 'started', 'completed'];
+foreach ($sort_columns as $col) {
+    // If clicking current sort column, toggle direction; otherwise use desc as default
+    $col_dir = ($sort === $col) ? $opposite_dir : 'desc';
+    $templatedata->{'sort_' . $col . '_url'} = new moodle_url('/local/customerintel/dashboard.php', [
+        'intel' => $search,
+        'sort' => $col,
+        'dir' => $col_dir
+    ]);
+    // Mark if this column is currently sorted and in which direction
+    $templatedata->{'sort_' . $col . '_active'} = ($sort === $col);
+    $templatedata->{'sort_' . $col . '_asc'} = ($sort === $col && $dir === 'asc');
+    $templatedata->{'sort_' . $col . '_desc'} = ($sort === $col && $dir === 'desc');
+}
+
 // Status icon configuration
 $status_config = [
     'completed' => ['icon' => 'fa-circle-check', 'class' => 'completed'],

@@ -27,6 +27,23 @@ body #page.drawers .main-inner {width: 100% !important; max-width:100% !importan
 
 i.processing, i.running,i.completed {color:#21DBBA }
 
+/* Sortable column headers */
+.sort-header {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.sort-header:hover {
+    color: #3577AF;
+    text-decoration: none;
+}
+.sort-header i {
+    font-size: 12px;
+    margin-left: 4px;
+    color: #3577AF;
+}
+
 
 .intel_dash_search input {
 
@@ -134,7 +151,15 @@ color: #3577AF;
     </div>
 
         <table class="inteldash_table">
-          <thead><tr><th>ID</th><th>{{#str}} customer, local_customerintel {{/str}}</th><th>{{#str}} target, local_customerintel {{/str}}</th><th>{{#str}} status, local_customerintel {{/str}}</th><th>{{#str}} started, local_customerintel {{/str}}</th><th>{{#str}} completed, local_customerintel {{/str}}</th><th>Actions</th></tr></thead>
+          <thead><tr>
+            <th><a href="{{sort_id_url}}" class="sort-header">ID {{#sort_id_asc}}<i class="fa-solid fa-sort-up"></i>{{/sort_id_asc}}{{#sort_id_desc}}<i class="fa-solid fa-sort-down"></i>{{/sort_id_desc}}</a></th>
+            <th><a href="{{sort_customer_url}}" class="sort-header">{{#str}} customer, local_customerintel {{/str}} {{#sort_customer_asc}}<i class="fa-solid fa-sort-up"></i>{{/sort_customer_asc}}{{#sort_customer_desc}}<i class="fa-solid fa-sort-down"></i>{{/sort_customer_desc}}</a></th>
+            <th><a href="{{sort_target_url}}" class="sort-header">{{#str}} target, local_customerintel {{/str}} {{#sort_target_asc}}<i class="fa-solid fa-sort-up"></i>{{/sort_target_asc}}{{#sort_target_desc}}<i class="fa-solid fa-sort-down"></i>{{/sort_target_desc}}</a></th>
+            <th><a href="{{sort_status_url}}" class="sort-header">{{#str}} status, local_customerintel {{/str}} {{#sort_status_asc}}<i class="fa-solid fa-sort-up"></i>{{/sort_status_asc}}{{#sort_status_desc}}<i class="fa-solid fa-sort-down"></i>{{/sort_status_desc}}</a></th>
+            <th><a href="{{sort_started_url}}" class="sort-header">{{#str}} started, local_customerintel {{/str}} {{#sort_started_asc}}<i class="fa-solid fa-sort-up"></i>{{/sort_started_asc}}{{#sort_started_desc}}<i class="fa-solid fa-sort-down"></i>{{/sort_started_desc}}</a></th>
+            <th><a href="{{sort_completed_url}}" class="sort-header">{{#str}} completed, local_customerintel {{/str}} {{#sort_completed_asc}}<i class="fa-solid fa-sort-up"></i>{{/sort_completed_asc}}{{#sort_completed_desc}}<i class="fa-solid fa-sort-down"></i>{{/sort_completed_desc}}</a></th>
+            <th>Actions</th>
+          </tr></thead>
           <tbody>
             {{#runs}}
             <tr>
