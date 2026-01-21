@@ -17,13 +17,13 @@ require_capability('local/customerintel:view', $context);
 
 // Get URL parameters for search and sorting
 $search = optional_param('intel', '', PARAM_TEXT);
-$sort = optional_param('sort', 'id', PARAM_ALPHA);
+$sort = optional_param('sort', 'started', PARAM_ALPHA);
 $dir = optional_param('dir', 'desc', PARAM_ALPHA);
 
 // Validate sort column
 $valid_sorts = ['id', 'customer', 'target', 'status', 'started', 'completed'];
 if (!in_array($sort, $valid_sorts)) {
-    $sort = 'id';
+    $sort = 'started';
 }
 
 // Validate direction
@@ -94,7 +94,7 @@ try {
         'started' => 'r.timecreated',
         'completed' => 'r.timecompleted'
     ];
-    $order_field = $sort_map[$sort] ?? 'r.id';
+    $order_field = $sort_map[$sort] ?? 'r.timecreated';
     $order_sql = "ORDER BY {$order_field} {$dir}";
 
     // Handle NULL values for completed column (put NULLs at end for desc, beginning for asc)
@@ -113,7 +113,9 @@ try {
             {$where_sql}
             {$order_sql}";
 
-    $recent_runs = $DB->get_records_sql($sql, $params);
+    // Limit results: show all matching when searching, otherwise show recent 5
+    $limit = empty($search) ? 5 : 0;
+    $recent_runs = $DB->get_records_sql($sql, $params, 0, $limit);
 
     // Set default names for missing companies
     foreach ($recent_runs as $run) {
@@ -144,28 +146,10 @@ if (has_capability('local/customerintel:manage', $context)) {
     $templatedata->canviewlogs = true;
 }
 
-// Search and sort parameters for template
+// Search and sort parameters for template (used by custom frontend)
 $templatedata->search = $search;
 $templatedata->sort = $sort;
 $templatedata->dir = $dir;
-$templatedata->dashboardurl = new moodle_url('/local/customerintel/dashboard.php');
-
-// Generate sort URLs for each column
-$opposite_dir = ($dir === 'asc') ? 'desc' : 'asc';
-$sort_columns = ['id', 'customer', 'target', 'status', 'started', 'completed'];
-foreach ($sort_columns as $col) {
-    // If clicking current sort column, toggle direction; otherwise use desc as default
-    $col_dir = ($sort === $col) ? $opposite_dir : 'desc';
-    $templatedata->{'sort_' . $col . '_url'} = new moodle_url('/local/customerintel/dashboard.php', [
-        'intel' => $search,
-        'sort' => $col,
-        'dir' => $col_dir
-    ]);
-    // Mark if this column is currently sorted and in which direction
-    $templatedata->{'sort_' . $col . '_active'} = ($sort === $col);
-    $templatedata->{'sort_' . $col . '_asc'} = ($sort === $col && $dir === 'asc');
-    $templatedata->{'sort_' . $col . '_desc'} = ($sort === $col && $dir === 'desc');
-}
 
 // Format runs for template
 $templatedata->runs = [];
