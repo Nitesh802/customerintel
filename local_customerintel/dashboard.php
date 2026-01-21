@@ -151,6 +151,24 @@ $templatedata->search = $search;
 $templatedata->sort = $sort;
 $templatedata->dir = $dir;
 
+// Status icon configuration
+$status_config = [
+    'completed' => ['icon' => 'fa-circle-check', 'class' => 'completed'],
+    'processing' => ['icon' => 'fa-circle-notch fa-spin', 'class' => 'processing'],
+    'running' => ['icon' => 'fa-circle-notch fa-spin', 'class' => 'running'],
+    'pending' => ['icon' => 'fa-circle-notch', 'class' => 'pending'],
+    'failed' => ['icon' => 'fa-circle-exclamation', 'class' => 'failed'],
+];
+
+// Status display mapping - show user-friendly terms
+$status_display_map = [
+    'pending' => 'Queued',
+    'processing' => 'In Progress',
+    'running' => 'In Progress',
+    'completed' => 'Completed',
+    'failed' => 'Failed'
+];
+
 // Format runs for template
 $templatedata->runs = [];
 foreach ($recent_runs as $run) {
@@ -158,7 +176,25 @@ foreach ($recent_runs as $run) {
     $rundata->id = $run->id;
     $rundata->customername = isset($run->customer_name) ? $run->customer_name : 'Unknown';
     $rundata->targetname = isset($run->target_name) ? $run->target_name : '-';
-    $rundata->status = $run->status;
+
+    // Status icon
+    $status = $run->status;
+    if (isset($status_config[$status])) {
+        $config = $status_config[$status];
+        $rundata->icon = sprintf(
+            '<i class="fa-solid %s %s" title="%s"></i>',
+            $config['icon'],
+            $config['class'],
+            $status
+        );
+    } else {
+        $rundata->icon = '';
+    }
+
+    // Normalize status display
+    $rundata->status = $status_display_map[$run->status] ?? $run->status;
+    $rundata->status_raw = $run->status; // Keep raw value for logic checks
+
     $rundata->timestarted_h = userdate($run->timecreated, get_string('strftimedatetime'));
     $rundata->timecompleted_h = ($run->status == 'completed' && !empty($run->timecompleted))
         ? userdate($run->timecompleted, get_string('strftimedatetime'))
